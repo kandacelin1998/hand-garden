@@ -43,25 +43,24 @@
 
     <h1>🌸 Hand Garden</h1>
 
-    <p id="status">Starting...</p>
+    <p id="status">Starting camera...</p>
 
     <div id="result">👋 Show me your hand</div>
 
     <video id="video" autoplay playsinline></video>
 
 
-    <!-- MediaPipe -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/vision_bundle.js"></script>
+    <script type="module">
 
+        import {
+            HandLandmarker,
+            FilesetResolver
+        } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1";
 
-    <script>
 
         const video = document.getElementById("video");
         const status = document.getElementById("status");
         const result = document.getElementById("result");
-
-
-        let handLandmarker;
 
 
         async function start() {
@@ -89,22 +88,52 @@
                     );
 
 
-             handLandmarker =
-    await HandLandmarker.createFromOptions(
-        vision,
-        {
-            baseOptions: {
-                modelAssetPath:
-                    "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
-            },
+                const handLandmarker =
+                    await HandLandmarker.createFromOptions(
+                        vision,
+                        {
+                            baseOptions: {
+                                modelAssetPath:
+                                    "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
+                            },
 
-            runningMode: "VIDEO",
+                            runningMode: "VIDEO",
 
-            numHands: 1
-        }
-    );
+                            numHands: 1
+                        }
+                    );
+
 
                 status.textContent = "Hand tracking ready ✨";
+
+
+                function detect() {
+
+                    if (video.readyState >= 2) {
+
+                        const hands =
+                            handLandmarker.detectForVideo(
+                                video,
+                                performance.now()
+                            );
+
+
+                        if (hands.landmarks.length > 0) {
+
+                            result.textContent =
+                                "✋ Hand detected!";
+
+                        } else {
+
+                            result.textContent =
+                                "👋 Show me your hand";
+
+                        }
+
+                    }
+
+                    requestAnimationFrame(detect);
+                }
 
 
                 detect();
@@ -118,37 +147,6 @@
                     "ERROR: " + error.message;
 
             }
-
-        }
-
-
-        function detect() {
-
-            if (video.readyState >= 2) {
-
-                const hands =
-                    handLandmarker.detectForVideo(
-                        video,
-                        performance.now()
-                    );
-
-
-                if (hands.landmarks.length > 0) {
-
-                    result.textContent =
-                        "✋ Hand detected!";
-
-                } else {
-
-                    result.textContent =
-                        "👋 Show me your hand";
-
-                }
-
-            }
-
-
-            requestAnimationFrame(detect);
 
         }
 
