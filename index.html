@@ -53,10 +53,9 @@
     <script type="module">
 
         import {
-            HandLandmarker,
-            FilesetResolver
-        } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/+esm";
-
+    HandLandmarker,
+    FilesetResolver
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm";
 
         const video = document.getElementById("video");
         const status = document.getElementById("status");
@@ -65,8 +64,7 @@
 
         // Load MediaPipe
         const vision = await FilesetResolver.forVisionTasks(
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm"
-        );
+          "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
 
 
         const handLandmarker = await HandLandmarker.createFromOptions(
