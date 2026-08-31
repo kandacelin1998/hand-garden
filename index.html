@@ -1,635 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>HAND / GARDEN</title>
 
 <style>
+*{box-sizing:border-box}
 
-* {
-    box-sizing: border-box;
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
-html,
-body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #000;
-    color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-    background: #000;
-}
-
-
-/* =====================================================
-   CAMERA
-===================================================== */
-
-#video {
-
-    position: fixed;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-
-    transform: scaleX(-1);
-
-    opacity: 0;
-
-    transition:
-        opacity 1s ease;
-
-    /*
-       BEAUTY CAMERA
-
-       brighter
-       softer
-       slightly luminous
-    */
-
+#video{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scaleX(-1);
+    opacity:0;
+    transition:opacity 1s ease;
     filter:
         brightness(1.12)
         contrast(.92)
         saturate(1.08)
         blur(.35px);
-
-    z-index: 1;
+    z-index:1;
 }
 
-#video.live {
-    opacity: 1;
-}
+#video.live{opacity:1}
 
-
-/*
-   SOFT LIGHT OVERLAY
-
-   Gives the camera a subtle
-   Japanese photo-booth glow.
-*/
-
-#beautyGlow {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 2;
-
-    pointer-events: none;
-
+#beautyGlow{
+    position:fixed;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
     background:
-
         radial-gradient(
             ellipse at center,
-            rgba(255,255,255,.10) 0%,
+            rgba(255,255,255,.11) 0%,
             rgba(255,255,255,.035) 42%,
             rgba(255,255,255,0) 72%
         );
-
-    mix-blend-mode: screen;
-
+    mix-blend-mode:screen;
 }
 
-
-/* =====================================================
-   FLOWER CANVAS
-===================================================== */
-
-#canvas {
-
-    position: fixed;
-
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
-    z-index: 4;
-
-    pointer-events: none;
-
+#canvas{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:4;
+    pointer-events:none;
 }
 
-
-/* =====================================================
-   UI DARK VIGNETTE
-===================================================== */
-
-#shade {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 5;
-
-    pointer-events: none;
-
+#shade{
+    position:fixed;
+    inset:0;
+    z-index:5;
+    pointer-events:none;
     background:
-
         radial-gradient(
             ellipse at center,
             rgba(0,0,0,0) 35%,
-            rgba(0,0,0,.28) 100%
+            rgba(0,0,0,.25) 100%
         );
-
 }
 
-
-/* =====================================================
-   TOP
-===================================================== */
-
-#top {
-
-    position: fixed;
-
-    top: 25px;
-
-    left: 28px;
-    right: 28px;
-
-    z-index: 20;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: .25em;
-
-    color:
-        rgba(255,255,255,.62);
-
+#top{
+    position:fixed;
+    top:25px;
+    left:28px;
+    right:28px;
+    z-index:20;
+    display:flex;
+    justify-content:space-between;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:9px;
+    letter-spacing:.25em;
+    color:rgba(255,255,255,.62);
 }
 
-.dim {
-    color:
-        rgba(255,255,255,.22);
+.dim{color:rgba(255,255,255,.22)}
+
+#info{
+    position:fixed;
+    left:28px;
+    bottom:27px;
+    z-index:20;
+    opacity:0;
+    transform:translateY(8px);
+    transition:opacity .6s ease,transform .6s ease;
+    pointer-events:none;
 }
 
-
-/* =====================================================
-   FLOWER INFO
-===================================================== */
-
-#info {
-
-    position: fixed;
-
-    left: 28px;
-
-    bottom: 27px;
-
-    z-index: 20;
-
-    opacity: 0;
-
-    transform:
-        translateY(8px);
-
-    transition:
-        opacity .6s ease,
-        transform .6s ease;
-
-    pointer-events: none;
-
+#info.show{
+    opacity:1;
+    transform:translateY(0);
 }
 
-#info.show {
-
-    opacity: 1;
-
-    transform:
-        translateY(0);
-
+#flower{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:27px;
+    letter-spacing:-.025em;
 }
 
-#flower {
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size: 27px;
-
-    letter-spacing:
-        -.025em;
-
+#meaning{
+    margin-top:6px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:8px;
+    letter-spacing:.23em;
+    color:rgba(255,255,255,.42);
 }
 
-#meaning {
-
-    margin-top: 6px;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 8px;
-
-    letter-spacing: .23em;
-
-    color:
-        rgba(255,255,255,.42);
-
+#gesture{
+    position:fixed;
+    right:28px;
+    bottom:28px;
+    z-index:20;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:8px;
+    letter-spacing:.2em;
+    color:rgba(255,255,255,.32);
 }
 
-
-/* =====================================================
-   GESTURE
-===================================================== */
-
-#gesture {
-
-    position: fixed;
-
-    right: 28px;
-
-    bottom: 28px;
-
-    z-index: 20;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 8px;
-
-    letter-spacing: .2em;
-
-    color:
-        rgba(255,255,255,.32);
-
+#intro{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    background:#000;
+    transition:opacity .8s ease;
 }
 
-
-/* =====================================================
-   INTRO
-===================================================== */
-
-#intro {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 50;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-direction: column;
-
-    background: #000;
-
-    transition:
-        opacity .8s ease;
-
+#intro.hide{
+    opacity:0;
+    pointer-events:none;
 }
 
-#intro.hide {
-
-    opacity: 0;
-
-    pointer-events: none;
-
+#title{
+    margin:0;
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:400;
+    font-size:clamp(52px,9vw,120px);
+    line-height:.85;
+    letter-spacing:-.055em;
 }
 
-#title {
-
-    margin: 0;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-weight: 400;
-
-    font-size:
-        clamp(52px, 9vw, 120px);
-
-    line-height: .85;
-
-    letter-spacing:
-        -.055em;
-
+#subtitle{
+    margin-top:20px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:8px;
+    letter-spacing:.35em;
+    color:rgba(255,255,255,.3);
+    text-transform:uppercase;
 }
 
-#subtitle {
-
-    margin-top: 20px;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 8px;
-
-    letter-spacing: .35em;
-
-    color:
-        rgba(255,255,255,.3);
-
-    text-transform: uppercase;
-
+#enter{
+    margin-top:48px;
+    padding:13px 30px;
+    border:1px solid rgba(255,255,255,.3);
+    background:transparent;
+    color:white;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:8px;
+    letter-spacing:.25em;
+    cursor:pointer;
+    transition:background .25s ease,color .25s ease,border .25s ease;
 }
 
-#enter {
-
-    margin-top: 48px;
-
-    padding: 13px 30px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.3);
-
-    background:
-        transparent;
-
-    color:
-        white;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 8px;
-
-    letter-spacing: .25em;
-
-    cursor: pointer;
-
-    transition:
-        background .25s ease,
-        color .25s ease,
-        border .25s ease;
-
+#enter:hover{
+    background:white;
+    color:black;
+    border-color:white;
 }
 
-#enter:hover {
-
-    background: white;
-
-    color: black;
-
-    border-color: white;
-
+#enter:disabled{
+    opacity:.5;
+    cursor:wait;
 }
 
-#enter:disabled {
-
-    opacity: .5;
-
-    cursor: wait;
-
+#loading{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:60;
+    display:none;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:9px;
+    letter-spacing:.2em;
+    color:rgba(255,255,255,.55);
 }
 
+#loading.show{display:block}
 
-/* =====================================================
-   LOADING
-===================================================== */
-
-#loading {
-
-    position: fixed;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    z-index: 60;
-
-    display: none;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: .2em;
-
-    color:
-        rgba(255,255,255,.55);
-
+#error{
+    position:fixed;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    z-index:100;
+    width:360px;
+    max-width:85vw;
+    text-align:center;
+    display:none;
+    font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:9px;
+    line-height:1.8;
+    color:rgba(255,255,255,.45);
 }
 
-#loading.show {
-    display: block;
+#error.show{display:block}
+
+#error strong{
+    display:block;
+    margin-bottom:12px;
+    color:white;
+    letter-spacing:.2em;
 }
-
-
-/* =====================================================
-   ERROR
-===================================================== */
-
-#error {
-
-    position: fixed;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    z-index: 100;
-
-    width: 360px;
-
-    max-width: 85vw;
-
-    text-align: center;
-
-    display: none;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 9px;
-
-    line-height: 1.8;
-
-    color:
-        rgba(255,255,255,.45);
-
-}
-
-#error.show {
-    display: block;
-}
-
-#error strong {
-
-    display: block;
-
-    margin-bottom: 12px;
-
-    color: white;
-
-    letter-spacing: .2em;
-
-}
-
 
 @media(max-width:600px){
-
-    #top {
-
-        left: 18px;
-        right: 18px;
-        top: 18px;
-
-    }
-
-    #info {
-
-        left: 18px;
-        bottom: 20px;
-
-    }
-
-    #gesture {
-
-        right: 18px;
-        bottom: 20px;
-
-    }
-
+    #top{left:18px;right:18px;top:18px}
+    #info{left:18px;bottom:20px}
+    #gesture{right:18px;bottom:20px}
 }
-
 </style>
 </head>
 
-
 <body>
 
-
-<!-- CAMERA -->
-
-<video
-    id="video"
-    autoplay
-    muted
-    playsinline>
-</video>
-
-
-<!-- BEAUTY LIGHT -->
-
+<video id="video" autoplay muted playsinline></video>
 <div id="beautyGlow"></div>
-
-
-<!-- FLOWERS -->
-
 <canvas id="canvas"></canvas>
-
-
 <div id="shade"></div>
 
-
-<!-- TOP -->
-
 <div id="top">
-
-    <div>
-        HAND <span class="dim">/</span> GARDEN
-    </div>
-
-    <div id="status">
-        OFFLINE
-    </div>
-
+    <div>HAND <span class="dim">/</span> GARDEN</div>
+    <div id="status">OFFLINE</div>
 </div>
-
-
-<!-- FLOWER INFO -->
 
 <div id="info">
-
-    <div id="flower">
-        Rose
-    </div>
-
-    <div id="meaning">
-        LOVE · COURAGE
-    </div>
-
+    <div id="flower">Rose</div>
+    <div id="meaning">LOVE · COURAGE</div>
 </div>
 
-
-<div id="gesture">
-    SHOW YOUR HAND
-</div>
-
-
-<!-- INTRO -->
+<div id="gesture">SHOW YOUR HAND</div>
 
 <div id="intro">
-
-    <h1 id="title">
-        Hand Garden
-    </h1>
-
-    <div id="subtitle">
-        A gesture becomes a flower
-    </div>
-
-    <button id="enter">
-        ENTER
-    </button>
-
+    <h1 id="title">Hand Garden</h1>
+    <div id="subtitle">A gesture becomes a flower</div>
+    <button id="enter">ENTER</button>
 </div>
 
-
-<div id="loading">
-    INITIALISING
-</div>
-
+<div id="loading">INITIALISING</div>
 
 <div id="error">
-
-    <strong>
-        CAMERA UNAVAILABLE
-    </strong>
-
+    <strong>CAMERA UNAVAILABLE</strong>
     Please allow camera access and reload the page.
-
 </div>
 
 
@@ -638,216 +276,106 @@ body {
 import {
     FilesetResolver,
     HandLandmarker
-}
-from
-"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.mjs";
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.mjs";
 
 
 /* =====================================================
    ELEMENTS
 ===================================================== */
 
-const video =
-    document.getElementById("video");
-
-const canvas =
-    document.getElementById("canvas");
-
-const ctx =
-    canvas.getContext("2d");
-
-const intro =
-    document.getElementById("intro");
-
-const enter =
-    document.getElementById("enter");
-
-const loading =
-    document.getElementById("loading");
-
-const errorBox =
-    document.getElementById("error");
-
-const status =
-    document.getElementById("status");
-
-const info =
-    document.getElementById("info");
-
-const flower =
-    document.getElementById("flower");
-
-const meaning =
-    document.getElementById("meaning");
-
-const gesture =
-    document.getElementById("gesture");
+const video=document.getElementById("video");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const intro=document.getElementById("intro");
+const enter=document.getElementById("enter");
+const loading=document.getElementById("loading");
+const errorBox=document.getElementById("error");
+const status=document.getElementById("status");
+const info=document.getElementById("info");
+const flower=document.getElementById("flower");
+const meaning=document.getElementById("meaning");
+const gesture=document.getElementById("gesture");
 
 
 /* =====================================================
    CANVAS
 ===================================================== */
 
-let W =
-    window.innerWidth;
-
-let H =
-    window.innerHeight;
-
+let W=innerWidth;
+let H=innerHeight;
 
 function resize(){
 
-    W =
-        window.innerWidth;
+    W=innerWidth;
+    H=innerHeight;
 
-    H =
-        window.innerHeight;
+    const dpr=Math.min(devicePixelRatio||1,2);
 
+    canvas.width=W*dpr;
+    canvas.height=H*dpr;
 
-    const dpr =
-        Math.min(
-            window.devicePixelRatio || 1,
-            2
-        );
+    canvas.style.width=W+"px";
+    canvas.style.height=H+"px";
 
-
-    canvas.width =
-        W * dpr;
-
-    canvas.height =
-        H * dpr;
-
-
-    canvas.style.width =
-        W + "px";
-
-    canvas.style.height =
-        H + "px";
-
-
-    ctx.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
-    );
-
+    ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 
-
 resize();
-
-
-window.addEventListener(
-    "resize",
-    resize
-);
+addEventListener("resize",resize);
 
 
 /* =====================================================
    STATE
 ===================================================== */
 
-let handLandmarker =
-    null;
+let handLandmarker=null;
+let lastVideoTime=-1;
 
-let lastVideoTime =
-    -1;
+let candidateGesture=null;
+let candidateFrames=0;
+let confirmedGesture=null;
 
-let currentGesture =
-    null;
+let lastPlant=0;
 
-let stableGesture =
-    null;
-
-let gestureFrames =
-    0;
-
-let lastPlant =
-    0;
-
-const plants = [];
-
-const particles = [];
+const plants=[];
+const particles=[];
 
 
 /* =====================================================
    FLOWERS
 ===================================================== */
 
-const FLOWERS = {
+const FLOWERS={
 
-    1: {
-
-        name:
-            "Rose",
-
-        meaning:
-            "LOVE · COURAGE",
-
-        type:
-            "rose"
-
+    1:{
+        name:"Rose",
+        meaning:"LOVE · COURAGE",
+        type:"rose"
     },
 
-
-    2: {
-
-        name:
-            "Tulip",
-
-        meaning:
-            "NEW BEGINNINGS",
-
-        type:
-            "tulip"
-
+    2:{
+        name:"Tulip",
+        meaning:"NEW BEGINNINGS",
+        type:"tulip"
     },
 
-
-    3: {
-
-        name:
-            "Sunflower",
-
-        meaning:
-            "JOY · POSITIVITY",
-
-        type:
-            "sunflower"
-
+    3:{
+        name:"Sunflower",
+        meaning:"JOY · POSITIVITY",
+        type:"sunflower"
     },
 
-
-    4: {
-
-        name:
-            "Peony",
-
-        meaning:
-            "PROSPERITY · BEAUTY",
-
-        type:
-            "peony"
-
+    4:{
+        name:"Peony",
+        meaning:"PROSPERITY · BEAUTY",
+        type:"peony"
     },
 
-
-    5: {
-
-        name:
-            "Wildflower",
-
-        meaning:
-            "FREEDOM · GRATITUDE",
-
-        type:
-            "wild"
-
+    5:{
+        name:"Wildflower",
+        meaning:"FREEDOM · GRATITUDE",
+        type:"wild"
     }
-
 };
 
 
@@ -857,415 +385,394 @@ const FLOWERS = {
 
 async function openCamera(){
 
-    if(
-        !navigator.mediaDevices ||
-        !navigator.mediaDevices.getUserMedia
-    ){
-
-        throw new Error(
-            "Camera API unavailable"
-        );
-
+    if(!navigator.mediaDevices?.getUserMedia){
+        throw new Error("Camera API unavailable");
     }
 
+    const stream=await navigator.mediaDevices.getUserMedia({
 
-    const stream =
-        await navigator
-        .mediaDevices
-        .getUserMedia({
+        video:{
+            facingMode:"user",
+            width:{ideal:1920},
+            height:{ideal:1080},
+            frameRate:{ideal:30}
+        },
 
-            video: {
+        audio:false
+    });
 
-                facingMode:
-                    "user",
+    video.srcObject=stream;
 
-                width: {
-                    ideal: 1920
-                },
-
-                height: {
-                    ideal: 1080
-                },
-
-                frameRate: {
-                    ideal: 30
-                }
-
-            },
-
-            audio:
-                false
-
-        });
-
-
-    video.srcObject =
-        stream;
-
-
-    await new Promise(
-        resolve => {
-
-            video.onloadedmetadata =
-                resolve;
-
-        }
-    );
-
+    await new Promise(resolve=>{
+        video.onloadedmetadata=resolve;
+    });
 
     await video.play();
 
-
-    video.classList.add(
-        "live"
-    );
-
+    video.classList.add("live");
 }
 
 
 /* =====================================================
-   TRACKER
+   MEDIAPIPE
 ===================================================== */
 
 async function createTracker(){
 
-    const vision =
-        await FilesetResolver
-        .forVisionTasks(
-
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
-
-        );
-
-
-    handLandmarker =
-        await HandLandmarker
-        .createFromOptions(
-
-            vision,
-
-            {
-
-                baseOptions: {
-
-                    modelAssetPath:
-
-                    "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-
-                    delegate:
-                        "GPU"
-
-                },
-
-
-                runningMode:
-                    "VIDEO",
-
-
-                numHands:
-                    1,
-
-
-                minHandDetectionConfidence:
-                    .42,
-
-
-                minHandPresenceConfidence:
-                    .42,
-
-
-                minTrackingConfidence:
-                    .42
-
-            }
-
-        );
-
-}
-
-
-/* =====================================================
-   DISTANCE
-===================================================== */
-
-function distance(a,b){
-
-    return Math.hypot(
-
-        a.x-b.x,
-
-        a.y-b.y
-
+    const vision=await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
     );
 
+    handLandmarker=await HandLandmarker.createFromOptions(
+        vision,
+        {
+            baseOptions:{
+                modelAssetPath:
+                "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+                delegate:"GPU"
+            },
+
+            runningMode:"VIDEO",
+            numHands:1,
+
+            minHandDetectionConfidence:.45,
+            minHandPresenceConfidence:.45,
+            minTrackingConfidence:.45
+        }
+    );
 }
 
 
 /* =====================================================
-   FINGER DETECTION
+   MATH
+===================================================== */
+
+function dist(a,b){
+
+    return Math.hypot(
+        a.x-b.x,
+        a.y-b.y
+    );
+}
+
+
+function angle(a,b,c){
+
+    const ab={
+        x:a.x-b.x,
+        y:a.y-b.y
+    };
+
+    const cb={
+        x:c.x-b.x,
+        y:c.y-b.y
+    };
+
+    const dot=
+        ab.x*cb.x+
+        ab.y*cb.y;
+
+    const mag=
+        Math.hypot(ab.x,ab.y)*
+        Math.hypot(cb.x,cb.y);
+
+    if(!mag) return 0;
+
+    return Math.acos(
+        Math.max(-1,Math.min(1,dot/mag))
+    )*180/Math.PI;
+}
+
+
+/* =====================================================
+   FINGER ANALYSIS
 ===================================================== */
 
 /*
-   Instead of simply checking y-position,
-   this version checks the angle and distance
-   of each finger.
+   MediaPipe indices:
 
-   This is much more tolerant of rotated hands.
+   Thumb:
+   1 2 3 4
+
+   Index:
+   5 6 7 8
+
+   Middle:
+   9 10 11 12
+
+   Ring:
+   13 14 15 16
+
+   Pinky:
+   17 18 19 20
 */
 
-function fingerExtended(
-    lm,
-    tip,
-    pip,
-    mcp
-){
 
-    const a =
-        distance(
-            lm[tip],
-            lm[pip]
-        );
+function fingerIsOpen(lm,mcp,pip,dip,tip){
 
-    const b =
-        distance(
-            lm[pip],
-            lm[mcp]
-        );
-
-    const c =
-        distance(
-            lm[tip],
-            lm[mcp]
-        );
-
-
-    /*
-       A straight finger has
-       tip → MCP significantly
-       longer than the individual
-       segments.
-    */
-
-    return (
-        c >
-        b * 1.18
-        &&
-        a >
-        b * .75
+    const a=angle(
+        lm[mcp],
+        lm[pip],
+        lm[dip]
     );
 
+    const b=angle(
+        lm[pip],
+        lm[dip],
+        lm[tip]
+    );
+
+    const straight=
+        a>150 &&
+        b>145;
+
+    const extension=
+        dist(lm[tip],lm[mcp]) >
+        dist(lm[dip],lm[mcp])*1.12;
+
+    return straight && extension;
 }
 
 
 /* =====================================================
-   COUNT FINGERS
+   THUMB
 ===================================================== */
 
-function countFingers(lm){
+function thumbIsOpen(lm){
 
-    let count =
-        0;
+    const angleAtIP=angle(
+        lm[2],
+        lm[3],
+        lm[4]
+    );
+
+    const palmWidth=
+        dist(lm[5],lm[17]);
+
+    const thumbDistance=
+        dist(lm[4],lm[5]);
+
+    /*
+       Thumb must be genuinely
+       away from the palm.
+    */
+
+    return(
+        angleAtIP>135 &&
+        thumbDistance>palmWidth*.55
+    );
+}
+
+
+/* =====================================================
+   PALM OPEN TEST
+===================================================== */
+
+function isOpenPalm(lm,fingers){
+
+    if(fingers!==5) return false;
+
+    const palmCenter={
+        x:
+            (
+                lm[0].x+
+                lm[5].x+
+                lm[9].x+
+                lm[13].x+
+                lm[17].x
+            )/5,
+
+        y:
+            (
+                lm[0].y+
+                lm[5].y+
+                lm[9].y+
+                lm[13].y+
+                lm[17].y
+            )/5
+    };
+
+
+    const tips=[
+        4,
+        8,
+        12,
+        16,
+        20
+    ];
+
+
+    const avgTipDistance=
+        tips.reduce(
+            (sum,i)=>
+                sum+
+                dist(
+                    lm[i],
+                    palmCenter
+                ),
+            0
+        )/5;
+
+
+    const palmWidth=
+        dist(lm[5],lm[17]);
 
 
     /*
-       INDEX
+       Open palm should have
+       fingertips clearly away
+       from the palm.
+    */
+
+    return(
+        avgTipDistance>
+        palmWidth*.92
+    );
+}
+
+
+/* =====================================================
+   COUNT
+===================================================== */
+
+function detectFingerCount(lm){
+
+    const index=fingerIsOpen(
+        lm,5,6,7,8
+    );
+
+    const middle=fingerIsOpen(
+        lm,9,10,11,12
+    );
+
+    const ring=fingerIsOpen(
+        lm,13,14,15,16
+    );
+
+    const pinky=fingerIsOpen(
+        lm,17,18,19,20
+    );
+
+    const thumb=thumbIsOpen(lm);
+
+
+    /*
+       Return individual states
+       because 4/5 needs special handling.
+    */
+
+    const states=[
+        thumb,
+        index,
+        middle,
+        ring,
+        pinky
+    ];
+
+    let count=
+        states.filter(Boolean).length;
+
+
+    /*
+       If all four long fingers are
+       clearly open, treat thumb as
+       open if it is reasonably away
+       from the palm.
     */
 
     if(
-        fingerExtended(
-            lm,
-            8,
-            6,
-            5
-        )
+        index &&
+        middle &&
+        ring &&
+        pinky
     ){
 
-        count++;
+        const palmWidth=
+            dist(lm[5],lm[17]);
 
+        const thumbSpread=
+            dist(lm[4],lm[5])/
+            palmWidth;
+
+        if(thumbSpread>.42){
+            count=5;
+        }
+        else{
+            count=4;
+        }
     }
 
 
     /*
-       MIDDLE
+       If four fingers are open and
+       thumb is folded, definitely 4.
     */
 
     if(
-        fingerExtended(
-            lm,
-            12,
-            10,
-            9
-        )
+        index &&
+        middle &&
+        ring &&
+        pinky &&
+        !thumb
     ){
 
-        count++;
-
-    }
-
-
-    /*
-       RING
-    */
-
-    if(
-        fingerExtended(
-            lm,
-            16,
-            14,
-            13
-        )
-    ){
-
-        count++;
-
-    }
-
-
-    /*
-       PINKY
-    */
-
-    if(
-        fingerExtended(
-            lm,
-            20,
-            18,
-            17
-        )
-    ){
-
-        count++;
-
-    }
-
-
-    /*
-       THUMB
-
-       Use the direction from
-       thumb MCP → thumb tip
-       relative to palm.
-    */
-
-    const thumbTip =
-        lm[4];
-
-    const thumbMCP =
-        lm[2];
-
-    const thumbIP =
-        lm[3];
-
-
-    const thumbLength =
-        distance(
-            thumbTip,
-            thumbMCP
-        );
-
-
-    const palmWidth =
-        distance(
-            lm[5],
-            lm[17]
-        );
-
-
-    const thumbAngle =
-        Math.abs(
-            thumbTip.x -
-            thumbIP.x
-        );
-
-
-    if(
-
-        thumbLength >
-        palmWidth * .48
-
-        &&
-
-        thumbAngle >
-        .025
-
-    ){
-
-        count++;
-
+        count=4;
     }
 
 
     return count;
-
 }
 
 
 /* =====================================================
-   STABLE GESTURE
+   GESTURE STABILISER
 ===================================================== */
 
-function stabilizeGesture(
-    detected
-){
+function stabilize(count){
 
-    if(
-        detected ===
-        currentGesture
-    ){
-
-        gestureFrames++;
-
+    if(!FLOWERS[count]){
+        return confirmedGesture;
     }
-    else{
 
-        currentGesture =
-            detected;
 
-        gestureFrames =
-            0;
+    if(count===candidateGesture){
+
+        candidateFrames++;
+
+    }else{
+
+        candidateGesture=count;
+        candidateFrames=1;
 
     }
 
 
     /*
-       Require roughly 4
-       consecutive frames.
-
-       This prevents flickering
-       between 4 and 5.
+       Need about 6 consistent frames.
+       This prevents jitter.
     */
 
-    if(
-        gestureFrames >= 4
-    ){
+    if(candidateFrames>=6){
 
-        stableGesture =
-            detected;
+        confirmedGesture=count;
 
     }
 
 
-    return stableGesture;
-
+    return confirmedGesture;
 }
 
 
 /* =====================================================
-   SCREEN POSITION
+   POSITION
 ===================================================== */
 
 function screenPosition(p){
 
-    return {
-
-        x:
-            (1-p.x) * W,
-
-        y:
-            p.y * H
-
+    return{
+        x:(1-p.x)*W,
+        y:p.y*H
     };
-
 }
 
 
@@ -1273,104 +780,59 @@ function screenPosition(p){
    PLANT
 ===================================================== */
 
-function plant(
-    type,
-    point
-){
+function plant(type,p){
 
-    const now =
-        performance.now();
+    const now=performance.now();
 
-
-    if(
-        now-lastPlant <
-        800
-    ){
-
+    if(now-lastPlant<850){
         return;
-
     }
 
-
-    lastPlant =
-        now;
-
+    lastPlant=now;
 
     plants.push({
 
-        x:
-            point.x,
+        x:p.x,
+        y:p.y,
 
-        y:
-            point.y,
+        type,
 
-        type:
-            type,
-
-        scale:
-            .72 +
+        scale:.72+
             Math.random()*.38,
 
         rotation:
-            (
-                Math.random()-.5
-            )*.25,
+            (Math.random()-.5)*.25,
 
-        age:
-            0
+        age:0
 
     });
 
 
-    if(
-        plants.length >
-        32
-    ){
-
+    if(plants.length>32){
         plants.shift();
-
     }
 
 
-    /*
-       Dreamy particles
-    */
-
-    for(
-        let i=0;
-        i<24;
-        i++
-    ){
+    for(let i=0;i<25;i++){
 
         particles.push({
 
-            x:
-                point.x,
-
-            y:
-                point.y,
+            x:p.x,
+            y:p.y,
 
             vx:
-                (
-                    Math.random()-.5
-                )*1.7,
+                (Math.random()-.5)*1.7,
 
             vy:
-                (
-                    Math.random()-.9
-                )*1.6,
+                (Math.random()-.9)*1.6,
 
             size:
                 .5+
                 Math.random()*1.8,
 
-            life:
-                1
-
+            life:1
         });
-
     }
-
 }
 
 
@@ -1378,171 +840,90 @@ function plant(
    STEM
 ===================================================== */
 
-function stem(
-    length=110
-){
+function stem(length=110){
 
     ctx.beginPath();
 
-    ctx.moveTo(
-        0,
-        0
-    );
+    ctx.moveTo(0,0);
 
     ctx.bezierCurveTo(
-
-        9,
-        length*.3,
-
-        -8,
-        length*.7,
-
-        0,
-        length
-
+        9,length*.3,
+        -8,length*.7,
+        0,length
     );
 
     ctx.stroke();
-
 }
 
 
-/* =====================================================
-   PETAL
-===================================================== */
-
 function petal(
-    x,
-    y,
-    rx,
-    ry,
-    rotation
+    x,y,rx,ry,rotation
 ){
 
     ctx.save();
 
-    ctx.translate(
-        x,
-        y
-    );
-
-    ctx.rotate(
-        rotation
-    );
+    ctx.translate(x,y);
+    ctx.rotate(rotation);
 
     ctx.beginPath();
 
     ctx.ellipse(
-        0,
-        0,
-        rx,
-        ry,
-        0,
-        0,
+        0,0,
+        rx,ry,
+        0,0,
         Math.PI*2
     );
 
     ctx.stroke();
 
     ctx.restore();
-
 }
 
 
 /* =====================================================
-   ROSE — DREAMY
+   ROSE
 ===================================================== */
 
-function drawRose(
-    x,
-    y,
-    s,
-    r
-){
+function drawRose(x,y,s,r){
 
     ctx.save();
 
-    ctx.translate(
-        x,
-        y
-    );
-
+    ctx.translate(x,y);
     ctx.rotate(r);
+    ctx.scale(s,s);
 
-    ctx.scale(
-        s,
-        s
-    );
-
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(126,181,141,.75)";
 
-    ctx.lineWidth =
-        1;
-
+    ctx.lineWidth=1;
 
     stem(115);
 
-
-    /*
-       soft rose petals
-    */
-
-    ctx.shadowBlur =
-        14;
-
-    ctx.shadowColor =
+    ctx.shadowBlur=15;
+    ctx.shadowColor=
         "rgba(255,155,200,.45)";
 
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(255,170,205,.9)";
 
+    for(let layer=0;layer<3;layer++){
 
-    for(
-        let layer=0;
-        layer<3;
-        layer++
-    ){
+        const radius=9+layer*6;
+        const n=7+layer*2;
 
-        const radius =
-            9+
-            layer*6;
-
-
-        const petals =
-            7+
-            layer*2;
-
-
-        for(
-            let i=0;
-            i<petals;
-            i++
-        ){
+        for(let i=0;i<n;i++){
 
             petal(
-
                 0,
-
                 -radius,
-
                 9-layer,
-
                 17-layer*2,
-
-                i*Math.PI*2/petals
-
+                i*Math.PI*2/n
             );
-
         }
-
     }
 
-
     ctx.restore();
-
 }
 
 
@@ -1550,97 +931,59 @@ function drawRose(
    TULIP
 ===================================================== */
 
-function drawTulip(
-    x,
-    y,
-    s,
-    r
-){
+function drawTulip(x,y,s,r){
 
     ctx.save();
 
-    ctx.translate(
-        x,
-        y
-    );
-
+    ctx.translate(x,y);
     ctx.rotate(r);
+    ctx.scale(s,s);
 
-    ctx.scale(
-        s,
-        s
-    );
-
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(126,181,141,.75)";
 
-    ctx.lineWidth =
-        1;
-
+    ctx.lineWidth=1;
 
     stem(112);
 
-
-    ctx.shadowBlur =
-        18;
-
-    ctx.shadowColor =
+    ctx.shadowBlur=18;
+    ctx.shadowColor=
         "rgba(255,170,205,.5)";
 
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(255,180,211,.92)";
-
 
     ctx.beginPath();
 
-    ctx.moveTo(
-        -28,
-        -5
+    ctx.moveTo(-28,-5);
+
+    ctx.bezierCurveTo(
+        -30,-34,
+        -17,-46,
+        -7,-25
     );
 
     ctx.bezierCurveTo(
-        -30,
-        -34,
-        -17,
-        -46,
-        -7,
-        -25
+        -2,-49,
+        5,-51,
+        13,-26
     );
 
     ctx.bezierCurveTo(
-        -2,
-        -49,
-        5,
-        -51,
-        13,
-        -26
+        23,-46,
+        31,-31,
+        28,-5
     );
 
     ctx.bezierCurveTo(
-        23,
-        -46,
-        31,
-        -31,
-        28,
-        -5
-    );
-
-    ctx.bezierCurveTo(
-        20,
-        18,
-        -20,
-        18,
-        -28,
-        -5
+        20,18,
+        -20,18,
+        -28,-5
     );
 
     ctx.stroke();
 
-
     ctx.restore();
-
 }
 
 
@@ -1648,104 +991,59 @@ function drawTulip(
    SUNFLOWER
 ===================================================== */
 
-function drawSunflower(
-    x,
-    y,
-    s,
-    r
-){
+function drawSunflower(x,y,s,r){
 
     ctx.save();
 
-    ctx.translate(
-        x,
-        y
-    );
-
+    ctx.translate(x,y);
     ctx.rotate(r);
+    ctx.scale(s,s);
 
-    ctx.scale(
-        s,
-        s
-    );
-
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(126,181,141,.75)";
 
-    ctx.lineWidth =
-        1;
-
+    ctx.lineWidth=1;
 
     stem(112);
 
-
-    ctx.shadowBlur =
-        16;
-
-    ctx.shadowColor =
+    ctx.shadowBlur=16;
+    ctx.shadowColor=
         "rgba(255,220,120,.45)";
 
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(255,218,128,.95)";
 
+    const n=20;
 
-    const petals =
-        20;
-
-
-    for(
-        let i=0;
-        i<petals;
-        i++
-    ){
-
-        const a =
-            i*Math.PI*2/petals;
-
+    for(let i=0;i<n;i++){
 
         ctx.save();
 
-        ctx.rotate(a);
-
+        ctx.rotate(i*Math.PI*2/n);
 
         petal(
-            0,
-            -25,
-            7,
-            23,
-            0
+            0,-25,
+            7,23,0
         );
 
-
         ctx.restore();
-
     }
 
+    ctx.shadowBlur=10;
 
-    ctx.shadowBlur =
-        10;
-
-    ctx.fillStyle =
+    ctx.fillStyle=
         "rgba(222,176,92,.95)";
-
 
     ctx.beginPath();
 
     ctx.arc(
-        0,
-        0,
-        8,
-        0,
-        Math.PI*2
+        0,0,8,
+        0,Math.PI*2
     );
 
     ctx.fill();
 
-
     ctx.restore();
-
 }
 
 
@@ -1753,83 +1051,38 @@ function drawSunflower(
    PEONY
 ===================================================== */
 
-function drawPeony(
-    x,
-    y,
-    s,
-    r
-){
+function drawPeony(x,y,s,r){
 
     ctx.save();
 
-    ctx.translate(
-        x,
-        y
-    );
-
+    ctx.translate(x,y);
     ctx.rotate(r);
+    ctx.scale(s,s);
 
-    ctx.scale(
-        s,
-        s
-    );
-
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(126,181,141,.75)";
 
-    ctx.lineWidth =
-        1;
-
+    ctx.lineWidth=1;
 
     stem(112);
 
-
-    ctx.shadowBlur =
-        22;
-
-    ctx.shadowColor =
+    ctx.shadowBlur=22;
+    ctx.shadowColor=
         "rgba(232,177,230,.55)";
 
-
-    ctx.strokeStyle =
+    ctx.strokeStyle=
         "rgba(239,192,230,.92)";
 
+    for(let ring=0;ring<4;ring++){
 
-    /*
-       many overlapping soft petals
-    */
+        const n=8+ring*2;
+        const radius=8+ring*5;
 
-    for(
-        let ring=0;
-        ring<4;
-        ring++
-    ){
-
-        const count =
-            8+
-            ring*2;
-
-
-        const radius =
-            8+
-            ring*5;
-
-
-        for(
-            let i=0;
-            i<count;
-            i++
-        ){
-
-            const a =
-                i*Math.PI*2/count;
-
+        for(let i=0;i<n;i++){
 
             ctx.save();
 
-            ctx.rotate(a);
-
+            ctx.rotate(i*Math.PI*2/n);
 
             petal(
                 0,
@@ -1839,32 +1092,23 @@ function drawPeony(
                 0
             );
 
-
             ctx.restore();
-
         }
-
     }
 
-
-    ctx.fillStyle =
+    ctx.fillStyle=
         "rgba(255,220,243,.8)";
 
     ctx.beginPath();
 
     ctx.arc(
-        0,
-        0,
-        4,
-        0,
-        Math.PI*2
+        0,0,4,
+        0,Math.PI*2
     );
 
     ctx.fill();
 
-
     ctx.restore();
-
 }
 
 
@@ -1872,233 +1116,115 @@ function drawPeony(
    WILDFLOWER
 ===================================================== */
 
-function drawWild(
-    x,
-    y,
-    s,
-    r
-){
+function drawWild(x,y,s,r){
 
     ctx.save();
 
-    ctx.translate(
-        x,
-        y
-    );
-
+    ctx.translate(x,y);
     ctx.rotate(r);
+    ctx.scale(s,s);
 
-    ctx.scale(
-        s,
-        s
-    );
-
-
-    const colors = [
-
+    const colors=[
         "rgba(255,183,215,.92)",
-
         "rgba(199,185,255,.92)",
-
         "rgba(255,222,153,.92)",
-
         "rgba(183,232,201,.92)",
-
         "rgba(240,198,255,.92)"
-
     ];
 
+    for(let i=0;i<5;i++){
 
-    for(
-        let i=0;
-        i<5;
-        i++
-    ){
+        const dx=(i-2)*14;
 
-        const dx =
-            (i-2)*14;
-
-
-        ctx.strokeStyle =
+        ctx.strokeStyle=
             "rgba(126,181,141,.65)";
-
 
         ctx.beginPath();
 
-        ctx.moveTo(
-            0,
-            0
-        );
+        ctx.moveTo(0,0);
 
         ctx.quadraticCurveTo(
-            dx*.3,
-            50,
-            dx,
-            110
+            dx*.3,50,
+            dx,110
         );
 
         ctx.stroke();
 
+        ctx.shadowBlur=13;
+        ctx.shadowColor=colors[i];
 
-        ctx.shadowBlur =
-            13;
+        ctx.strokeStyle=colors[i];
 
-        ctx.shadowColor =
-            colors[i];
-
-
-        ctx.strokeStyle =
-            colors[i];
-
-
-        for(
-            let p=0;
-            p<6;
-            p++
-        ){
+        for(let p=0;p<6;p++){
 
             ctx.save();
 
-            ctx.translate(
-                dx,
-                -25
-            );
+            ctx.translate(dx,-25);
 
-            ctx.rotate(
-                p*Math.PI*2/6
-            );
-
+            ctx.rotate(p*Math.PI*2/6);
 
             petal(
-                0,
-                -8,
-                4,
-                10,
-                0
+                0,-8,
+                4,10,0
             );
 
-
             ctx.restore();
-
         }
-
     }
 
-
     ctx.restore();
-
 }
 
 
 /* =====================================================
-   RENDER
+   ANIMATION
 ===================================================== */
 
 function animate(){
 
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
-    );
+    ctx.clearRect(0,0,W,H);
 
 
-    for(
-        const p of plants
-    ){
+    for(const p of plants){
 
-        p.age +=
-            .026;
+        p.age+=.026;
 
+        const growth=Math.min(p.age,1);
 
-        const growth =
-            Math.min(
-                p.age,
-                1
-            );
+        const scale=p.scale*growth;
 
 
-        const scale =
-            p.scale*
-            growth;
-
-
-        if(
-            p.type === "rose"
-        ){
-
+        if(p.type==="rose")
             drawRose(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
+                p.x,p.y,
+                scale,p.rotation
             );
 
-        }
-
-
-        if(
-            p.type === "tulip"
-        ){
-
+        if(p.type==="tulip")
             drawTulip(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
+                p.x,p.y,
+                scale,p.rotation
             );
 
-        }
-
-
-        if(
-            p.type === "sunflower"
-        ){
-
+        if(p.type==="sunflower")
             drawSunflower(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
+                p.x,p.y,
+                scale,p.rotation
             );
 
-        }
-
-
-        if(
-            p.type === "peony"
-        ){
-
+        if(p.type==="peony")
             drawPeony(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
+                p.x,p.y,
+                scale,p.rotation
             );
 
-        }
-
-
-        if(
-            p.type === "wild"
-        ){
-
+        if(p.type==="wild")
             drawWild(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
+                p.x,p.y,
+                scale,p.rotation
             );
-
-        }
-
     }
 
-
-    /*
-       FLOATING LIGHT
-    */
 
     for(
         let i=particles.length-1;
@@ -2106,118 +1232,80 @@ function animate(){
         i--
     ){
 
-        const p =
-            particles[i];
+        const p=particles[i];
 
+        p.x+=p.vx;
+        p.y+=p.vy;
 
-        p.x +=
-            p.vx;
+        p.vy+=.012;
+        p.life-=.014;
 
-        p.y +=
-            p.vy;
+        if(p.life<=0){
 
-        p.vy +=
-            .012;
-
-        p.life -=
-            .014;
-
-
-        if(
-            p.life <= 0
-        ){
-
-            particles.splice(
-                i,
-                1
-            );
-
+            particles.splice(i,1);
             continue;
-
         }
-
 
         ctx.save();
 
-        ctx.globalAlpha =
-            p.life*.7;
+        ctx.globalAlpha=p.life*.7;
 
-        ctx.fillStyle =
-            "white";
+        ctx.fillStyle="white";
 
-        ctx.shadowBlur =
-            14;
-
-        ctx.shadowColor =
-            "white";
-
+        ctx.shadowBlur=14;
+        ctx.shadowColor="white";
 
         ctx.beginPath();
 
         ctx.arc(
-            p.x,
-            p.y,
+            p.x,p.y,
             p.size,
-            0,
-            Math.PI*2
+            0,Math.PI*2
         );
 
         ctx.fill();
 
         ctx.restore();
-
     }
 
 
-    requestAnimationFrame(
-        animate
-    );
-
+    requestAnimationFrame(animate);
 }
-
 
 animate();
 
 
 /* =====================================================
-   HAND DETECTION
+   DETECTION LOOP
 ===================================================== */
 
 async function detectHands(){
 
     if(
         !handLandmarker ||
-        video.readyState < 2
+        video.readyState<2
     ){
 
-        requestAnimationFrame(
-            detectHands
-        );
-
+        requestAnimationFrame(detectHands);
         return;
-
     }
 
 
     if(
-        video.currentTime !==
+        video.currentTime!==
         lastVideoTime
     ){
 
-        lastVideoTime =
+        lastVideoTime=
             video.currentTime;
 
 
         try{
 
-            const result =
-                handLandmarker
-                .detectForVideo(
-
+            const result=
+                handLandmarker.detectForVideo(
                     video,
-
                     performance.now()
-
                 );
 
 
@@ -2226,99 +1314,74 @@ async function detectHands(){
                 result.landmarks.length
             ){
 
-                const lm =
+                const lm=
                     result.landmarks[0];
 
 
-                const fingers =
-                    countFingers(lm);
+                const rawCount=
+                    detectFingerCount(lm);
 
 
-                const stable =
-                    stabilizeGesture(
-                        fingers
-                    );
+                const stable=
+                    stabilize(rawCount);
 
 
-                const data =
-                    FLOWERS[stable];
+                if(stable){
+
+                    const data=
+                        FLOWERS[stable];
 
 
-                if(data){
+                    flower.textContent=
+                        data.name;
 
-                    if(
-                        currentGesture ===
-                        stable
-                    ){
+                    meaning.textContent=
+                        data.meaning;
 
-                        flower.textContent =
-                            data.name;
-
-                        meaning.textContent =
-                            data.meaning;
-
-                        info.classList.add(
-                            "show"
-                        );
-
-                    }
+                    info.classList.add("show");
 
 
-                    gesture.textContent =
-                        stable +
-                        " FINGER" +
-                        (stable === 1 ? "" : "S") +
-                        " · " +
+                    gesture.textContent=
+                        stable+
+                        " FINGER"+
+                        (stable===1?"":"S")+
+                        " · "+
                         data.name;
 
 
-                    const point =
-                        screenPosition(
-                            lm[8]
-                        );
+                    const point=
+                        screenPosition(lm[8]);
 
 
                     plant(
                         data.type,
                         point
                     );
-
                 }
 
-            }
-            else{
+            }else{
 
-                currentGesture =
-                    null;
+                candidateGesture=null;
+                candidateFrames=0;
+                confirmedGesture=null;
 
-                stableGesture =
-                    null;
+                info.classList.remove("show");
 
-                gestureFrames =
-                    0;
-
-                gesture.textContent =
+                gesture.textContent=
                     "SHOW YOUR HAND";
-
             }
 
-        }
-        catch(err){
+        }catch(err){
 
             console.error(
                 "HAND TRACKING ERROR:",
                 err
             );
-
         }
-
     }
 
 
-    requestAnimationFrame(
-        detectHands
-    );
-
+    requestAnimationFrame(detectHands);
 }
 
 
@@ -2328,87 +1391,53 @@ async function detectHands(){
 
 enter.addEventListener(
     "click",
+    async()=>{
 
-    async () => {
+        enter.disabled=true;
+        enter.textContent="STARTING";
 
-        enter.disabled =
-            true;
-
-        enter.textContent =
-            "STARTING";
-
-
-        loading.classList.add(
-            "show"
-        );
+        loading.classList.add("show");
 
 
         try{
 
-            status.textContent =
-                "CAMERA";
-
+            status.textContent="CAMERA";
 
             await openCamera();
 
 
-            status.textContent =
-                "TRACKER";
-
+            status.textContent="TRACKER";
 
             await createTracker();
 
 
-            loading.classList.remove(
-                "show"
-            );
+            loading.classList.remove("show");
 
+            intro.classList.add("hide");
 
-            intro.classList.add(
-                "hide"
-            );
-
-
-            status.textContent =
-                "LIVE";
+            status.textContent="LIVE";
 
 
             detectHands();
 
 
-        }
-        catch(err){
+        }catch(err){
 
             console.error(
                 "HAND GARDEN ERROR:",
                 err
             );
 
+            loading.classList.remove("show");
 
-            loading.classList.remove(
-                "show"
-            );
+            errorBox.classList.add("show");
 
+            status.textContent="ERROR";
 
-            errorBox.classList.add(
-                "show"
-            );
-
-
-            status.textContent =
-                "ERROR";
-
-
-            enter.disabled =
-                false;
-
-            enter.textContent =
-                "RETRY";
-
+            enter.disabled=false;
+            enter.textContent="RETRY";
         }
-
     }
-
 );
 
 </script>
