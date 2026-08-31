@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Hand Garden</title>
+<title>Hand Garden — Gesture Study</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -14,11 +15,12 @@
 html,
 body {
     margin: 0;
+    padding: 0;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #050505;
-    color: #f2f2f2;
+    background: #050706;
+    color: #f4f3ef;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -26,16 +28,13 @@ body {
     cursor: crosshair;
 }
 
-#app {
+
+/* =========================
+   CAMERA
+========================= */
+
+#camera {
     position: fixed;
-    inset: 0;
-    background: #050505;
-}
-
-/* CAMERA */
-
-#video {
-    position: absolute;
     inset: 0;
 
     width: 100%;
@@ -47,60 +46,88 @@ body {
 
     opacity: 0;
 
-    transition: opacity 1.2s ease;
-
     filter:
-        grayscale(0.25)
-        contrast(1.05)
-        brightness(0.7);
+        brightness(0.48)
+        contrast(1.08)
+        saturate(0.55);
+
+    transition: opacity 1.4s ease;
+
+    z-index: 1;
 }
 
-#video.active {
-    opacity: 0.48;
+#camera.visible {
+    opacity: 1;
 }
 
 
-/* CANVAS */
+/* =========================
+   CANVAS
+========================= */
 
-#canvas {
-    position: absolute;
+#art {
+    position: fixed;
     inset: 0;
 
     width: 100%;
     height: 100%;
 
-    pointer-events: none;
-
     z-index: 3;
+
+    pointer-events: none;
 }
 
 
-/* SUBTLE VIGNETTE */
+/* =========================
+   OVERLAY
+========================= */
 
-#vignette {
-    position: absolute;
+#overlay {
+    position: fixed;
     inset: 0;
 
-    pointer-events: none;
-
     z-index: 4;
+
+    pointer-events: none;
 
     background:
         radial-gradient(
             circle at center,
-            transparent 30%,
-            rgba(0,0,0,0.55) 100%
+            rgba(0,0,0,0) 25%,
+            rgba(0,0,0,0.42) 100%
         );
 }
 
 
-/* TOP LEFT */
+/* =========================
+   GRAIN
+========================= */
 
-#brand {
-    position: absolute;
+#grain {
+    position: fixed;
+    inset: 0;
 
-    top: 26px;
-    left: 30px;
+    z-index: 5;
+
+    pointer-events: none;
+
+    opacity: 0.055;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+
+/* =========================
+   TOP UI
+========================= */
+
+#top-left {
+
+    position: fixed;
+
+    top: 25px;
+    left: 28px;
 
     z-index: 10;
 
@@ -109,157 +136,128 @@ body {
         Consolas,
         monospace;
 
-    font-size: 11px;
+    font-size: 10px;
+
+    letter-spacing: 0.22em;
+
+    color:
+        rgba(255,255,255,0.62);
+}
+
+#top-left span {
+
+    color:
+        rgba(255,255,255,0.22);
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+#status {
+
+    position: fixed;
+
+    top: 25px;
+    right: 28px;
+
+    z-index: 10;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+
+    letter-spacing: 0.18em;
+
+    color:
+        rgba(255,255,255,0.3);
+
+}
+
+
+/* =========================
+   FLOWER INFO
+========================= */
+
+#info {
+
+    position: fixed;
+
+    left: 28px;
+    bottom: 27px;
+
+    z-index: 10;
+
+    opacity: 0;
+
+    transform:
+        translateY(8px);
+
+    transition:
+        opacity .5s ease,
+        transform .5s ease;
+
+    pointer-events: none;
+}
+
+#info.show {
+
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+#flower {
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 10px;
 
     letter-spacing: 0.22em;
 
     text-transform: uppercase;
 
-    color: rgba(255,255,255,0.72);
 }
 
-#brand span {
-    color: rgba(255,255,255,0.28);
-}
+#meaning {
 
-
-/* TOP RIGHT */
-
-#status {
-    position: absolute;
-
-    top: 27px;
-    right: 30px;
-
-    z-index: 10;
+    margin-top: 6px;
 
     font-family:
         "SFMono-Regular",
         Consolas,
         monospace;
 
-    font-size: 9px;
+    font-size: 8px;
 
     letter-spacing: 0.15em;
 
-    color: rgba(255,255,255,0.35);
-
-    text-transform: uppercase;
-}
-
-
-/* INTRO */
-
-#intro {
-    position: absolute;
-
-    inset: 0;
-
-    z-index: 20;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-direction: column;
-
-    background: #050505;
-
-    transition:
-        opacity 0.8s ease,
-        visibility 0.8s ease;
-}
-
-#intro.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-#intro-title {
-
-    font-size:
-        clamp(42px, 7vw, 82px);
-
-    font-weight: 300;
-
-    letter-spacing:
-        -0.045em;
-
-    margin-bottom: 14px;
-}
-
-#intro-subtitle {
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: 0.24em;
-
     color:
-        rgba(255,255,255,0.4);
+        rgba(255,255,255,0.38);
 
     text-transform: uppercase;
-
-    margin-bottom: 42px;
-}
-
-#start {
-
-    appearance: none;
-
-    border: 1px solid
-        rgba(255,255,255,0.35);
-
-    background: transparent;
-
-    color: white;
-
-    padding:
-        13px 27px;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
-
-    font-size: 9px;
-
-    letter-spacing: 0.2em;
-
-    cursor: pointer;
-
-    transition:
-        background 0.25s ease,
-        color 0.25s ease,
-        border 0.25s ease;
-}
-
-#start:hover {
-
-    background: white;
-
-    color: black;
-
-    border-color: white;
 }
 
 
-/* BOTTOM */
+/* =========================
+   HINT
+========================= */
 
 #hint {
 
-    position: absolute;
+    position: fixed;
 
     left: 50%;
-
-    bottom: 25px;
+    bottom: 27px;
 
     transform:
         translateX(-50%);
@@ -275,56 +273,91 @@ body {
 
     letter-spacing: 0.18em;
 
+    color:
+        rgba(255,255,255,0.24);
+
     text-transform: uppercase;
 
-    color:
-        rgba(255,255,255,0.3);
+    transition:
+        opacity .5s ease;
 
-    white-space: nowrap;
+}
+
+#hint.hide {
+    opacity: 0;
 }
 
 
-/* FLOWER INFO */
+/* =========================
+   INTRO
+========================= */
 
-#flowerInfo {
+#intro {
 
-    position: absolute;
+    position: fixed;
 
-    left: 30px;
+    inset: 0;
 
-    bottom: 28px;
+    z-index: 30;
 
-    z-index: 10;
+    display: flex;
 
-    pointer-events: none;
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #101913 0%,
+            #050706 55%,
+            #030404 100%
+        );
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+
+}
+
+#intro.hidden {
 
     opacity: 0;
 
-    transition:
-        opacity 0.4s ease;
+    visibility: hidden;
+
+    pointer-events: none;
+
 }
 
-#flowerInfo.visible {
-    opacity: 1;
-}
 
-#flowerName {
+#title {
 
     font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    font-size: 10px;
+    font-weight: 400;
 
-    letter-spacing: 0.2em;
+    font-size:
+        clamp(48px, 8vw, 100px);
 
-    text-transform: uppercase;
+    letter-spacing:
+        -0.045em;
+
+    line-height: 0.9;
+
+    margin: 0;
+
 }
 
-#flowerMeaning {
 
-    margin-top: 5px;
+#subtitle {
+
+    margin-top: 18px;
 
     font-family:
         "SFMono-Regular",
@@ -333,120 +366,251 @@ body {
 
     font-size: 8px;
 
-    letter-spacing: 0.12em;
+    letter-spacing: 0.32em;
+
+    text-transform: uppercase;
 
     color:
-        rgba(255,255,255,0.4);
+        rgba(255,255,255,0.35);
+
 }
 
 
-/* MOBILE */
+#enter {
+
+    margin-top: 48px;
+
+    padding:
+        14px 30px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.28);
+
+    background:
+        transparent;
+
+    color:
+        rgba(255,255,255,0.9);
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+
+    letter-spacing: 0.22em;
+
+    cursor: pointer;
+
+    transition:
+        all .3s ease;
+
+}
+
+#enter:hover {
+
+    background:
+        rgba(255,255,255,0.95);
+
+    color:
+        #050706;
+
+    border-color:
+        white;
+
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+#error {
+
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index: 40;
+
+    width: min(90%, 420px);
+
+    text-align: center;
+
+    display: none;
+
+}
+
+#error.visible {
+    display: block;
+}
+
+#error-title {
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 0.18em;
+
+    margin-bottom: 12px;
+
+}
+
+#error-text {
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    color:
+        rgba(255,255,255,0.45);
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
 
-    #brand {
-        top: 20px;
-        left: 20px;
+    #top-left {
+        left: 18px;
+        top: 18px;
     }
 
     #status {
-        top: 21px;
-        right: 20px;
+        right: 18px;
+        top: 18px;
+    }
+
+    #info {
+        left: 18px;
+        bottom: 18px;
     }
 
     #hint {
         bottom: 18px;
     }
 
-    #flowerInfo {
-        left: 20px;
-        bottom: 18px;
-    }
 }
+
 </style>
 </head>
 
 
 <body>
 
-<div id="app">
 
-    <video
-        id="video"
-        autoplay
-        muted
-        playsinline>
-    </video>
-
-    <canvas id="canvas"></canvas>
-
-    <div id="vignette"></div>
+<video
+    id="camera"
+    autoplay
+    muted
+    playsinline>
+</video>
 
 
-    <div id="brand">
-        HAND <span>/</span> GARDEN
+<canvas id="art"></canvas>
+
+<div id="overlay"></div>
+
+<div id="grain"></div>
+
+
+<div id="top-left">
+    HAND <span>/</span> GARDEN
+</div>
+
+
+<div id="status">
+    STANDBY
+</div>
+
+
+<div id="info">
+
+    <div id="flower">
+        ROSE
     </div>
 
-
-    <div id="status">
-        OFFLINE
-    </div>
-
-
-    <div id="hint">
-        move your hand through the frame
-    </div>
-
-
-    <div id="flowerInfo">
-
-        <div id="flowerName">
-            ROSE
-        </div>
-
-        <div id="flowerMeaning">
-            LOVE · COURAGE
-        </div>
-
-    </div>
-
-
-    <div id="intro">
-
-        <div id="intro-title">
-            Hand Garden
-        </div>
-
-        <div id="intro-subtitle">
-            a small experiment in gesture & memory
-        </div>
-
-        <button id="start">
-            ENTER
-        </button>
-
+    <div id="meaning">
+        LOVE · COURAGE
     </div>
 
 </div>
 
 
+<div id="hint">
+    show your hand
+</div>
+
+
+<!-- INTRO -->
+
+<section id="intro">
+
+    <h1 id="title">
+        Hand Garden
+    </h1>
+
+    <div id="subtitle">
+        gesture becomes memory
+    </div>
+
+    <button id="enter">
+        ENTER EXPERIENCE
+    </button>
+
+</section>
+
+
+<div id="error">
+
+    <div id="error-title">
+        CAMERA UNAVAILABLE
+    </div>
+
+    <div id="error-text">
+        Please allow camera access and reload the page.
+    </div>
+
+</div>
+
+
+
 <script type="module">
+
+/* =========================================================
+   MEDIAPIPE
+========================================================= */
 
 import {
     FilesetResolver,
     HandLandmarker
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs";
+}
+from
+"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs";
 
 
-/* --------------------------------
+/* =========================================================
    ELEMENTS
--------------------------------- */
+========================================================= */
 
-const video =
-    document.getElementById("video");
+const camera =
+    document.getElementById("camera");
 
 const canvas =
-    document.getElementById("canvas");
+    document.getElementById("art");
 
 const ctx =
     canvas.getContext("2d");
@@ -454,103 +618,127 @@ const ctx =
 const intro =
     document.getElementById("intro");
 
-const startButton =
-    document.getElementById("start");
+const enter =
+    document.getElementById("enter");
 
 const status =
     document.getElementById("status");
 
-const flowerInfo =
-    document.getElementById("flowerInfo");
+const hint =
+    document.getElementById("hint");
 
-const flowerName =
-    document.getElementById("flowerName");
+const info =
+    document.getElementById("info");
 
-const flowerMeaning =
-    document.getElementById("flowerMeaning");
+const flowerText =
+    document.getElementById("flower");
+
+const meaningText =
+    document.getElementById("meaning");
+
+const errorBox =
+    document.getElementById("error");
 
 
-/* --------------------------------
+/* =========================================================
    STATE
--------------------------------- */
+========================================================= */
 
-let handLandmarker = null;
+let tracker = null;
+
+let stream = null;
 
 let lastVideoTime = -1;
+
+let width =
+    window.innerWidth;
+
+let height =
+    window.innerHeight;
+
+let lastPlantTime = 0;
+
+let lastGesture = null;
 
 let flowers = [];
 
 let particles = [];
 
-let lastFlower = 0;
-
-let W = window.innerWidth;
-
-let H = window.innerHeight;
+let handVisible = false;
 
 
-/* --------------------------------
-   FLOWER MEANINGS
--------------------------------- */
+/* =========================================================
+   FLOWERS
+========================================================= */
 
-const FLOWERS = {
+const FLOWER_TYPES = {
 
-    one: {
+    1: {
 
-        type: "rose",
-
-        name: "ROSE",
+        name:
+            "ROSE",
 
         meaning:
-            "LOVE · COURAGE"
+            "LOVE · COURAGE",
+
+        type:
+            "rose"
 
     },
 
-    two: {
+    2: {
 
-        type: "iris",
-
-        name: "IRIS",
+        name:
+            "TULIP",
 
         meaning:
-            "INTUITION · HOPE"
+            "NEW BEGINNINGS",
+
+        type:
+            "tulip"
 
     },
 
-    three: {
+    3: {
 
-        type: "cosmos",
-
-        name: "COSMOS",
+        name:
+            "SUNFLOWER",
 
         meaning:
-            "HARMONY · PEACE"
+            "JOY · POSITIVITY",
+
+        type:
+            "sunflower"
 
     },
 
-    five: {
+    5: {
 
-        type: "wild",
-
-        name: "WILDFLOWER",
+        name:
+            "WILDFLOWERS",
 
         meaning:
-            "FREEDOM · GRATITUDE"
+            "FREEDOM · GRATITUDE",
+
+        type:
+            "wild"
 
     }
 
 };
 
 
-/* --------------------------------
+/* =========================================================
    RESIZE
--------------------------------- */
+========================================================= */
 
-function resize() {
+function resizeCanvas() {
 
-    W = window.innerWidth;
+    width =
+        window.innerWidth;
 
-    H = window.innerHeight;
+    height =
+        window.innerHeight;
 
     const dpr =
         Math.min(
@@ -559,16 +747,16 @@ function resize() {
         );
 
     canvas.width =
-        W * dpr;
+        width * dpr;
 
     canvas.height =
-        H * dpr;
+        height * dpr;
 
     canvas.style.width =
-        W + "px";
+        width + "px";
 
     canvas.style.height =
-        H + "px";
+        height + "px";
 
     ctx.setTransform(
         dpr,
@@ -582,17 +770,17 @@ function resize() {
 
 window.addEventListener(
     "resize",
-    resize
+    resizeCanvas
 );
 
-resize();
+resizeCanvas();
 
 
-/* --------------------------------
+/* =========================================================
    CAMERA
--------------------------------- */
+========================================================= */
 
-async function startCamera() {
+async function openCamera() {
 
     if (
         !navigator.mediaDevices ||
@@ -600,14 +788,16 @@ async function startCamera() {
     ) {
 
         throw new Error(
-            "Camera access is not supported by this browser."
+            "getUserMedia is unavailable"
         );
 
     }
 
-    const stream =
+    stream =
         await navigator.mediaDevices
         .getUserMedia({
+
+            audio: false,
 
             video: {
 
@@ -621,171 +811,205 @@ async function startCamera() {
                     ideal: 720
                 }
 
-            },
-
-            audio: false
+            }
 
         });
 
-    video.srcObject =
+    camera.srcObject =
         stream;
 
-    await video.play();
+    await new Promise(
+        resolve => {
 
-    video.classList.add(
-        "active"
+            camera.onloadedmetadata =
+                resolve;
+
+        }
     );
+
+    await camera.play();
+
+    camera.classList.add(
+        "visible"
+    );
+
 }
 
 
-/* --------------------------------
-   MEDIAPIPE
--------------------------------- */
+/* =========================================================
+   CREATE HAND TRACKER
+========================================================= */
 
-async function createHandTracker() {
+async function createTracker() {
 
     const vision =
         await FilesetResolver
         .forVisionTasks(
-
             "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm"
-
         );
 
 
-    handLandmarker =
+    tracker =
         await HandLandmarker
         .createFromOptions(
-
             vision,
-
             {
 
                 baseOptions: {
 
                     modelAssetPath:
+                    "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
 
-                        "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-
-                    delegate: "GPU"
+                    delegate:
+                        "GPU"
 
                 },
 
-                runningMode: "VIDEO",
+                runningMode:
+                    "VIDEO",
 
-                numHands: 1,
+                numHands:
+                    1,
 
                 minHandDetectionConfidence:
-                    0.45,
+                    0.5,
 
                 minHandPresenceConfidence:
-                    0.45,
+                    0.5,
 
                 minTrackingConfidence:
-                    0.45
+                    0.5
 
             }
-
         );
 
 }
 
 
-/* --------------------------------
-   FINGER COUNT
--------------------------------- */
+/* =========================================================
+   FINGER DETECTION
+========================================================= */
+
+function distance(a, b) {
+
+    const dx =
+        a.x - b.x;
+
+    const dy =
+        a.y - b.y;
+
+    return Math.sqrt(
+        dx * dx +
+        dy * dy
+    );
+}
+
+
+function fingerExtended(
+    landmarks,
+    tip,
+    pip
+) {
+
+    return (
+        landmarks[tip].y <
+        landmarks[pip].y
+    );
+
+}
+
 
 function countFingers(
-    lm,
+    landmarks,
     handedness
 ) {
 
     let count = 0;
 
 
-    /*
-        INDEX
-    */
+    /* INDEX */
 
     if (
-        lm[8].y <
-        lm[6].y
+        fingerExtended(
+            landmarks,
+            8,
+            6
+        )
     ) {
-
         count++;
-
     }
 
 
-    /*
-        MIDDLE
-    */
+    /* MIDDLE */
 
     if (
-        lm[12].y <
-        lm[10].y
+        fingerExtended(
+            landmarks,
+            12,
+            10
+        )
     ) {
-
         count++;
-
     }
 
 
-    /*
-        RING
-    */
+    /* RING */
 
     if (
-        lm[16].y <
-        lm[14].y
+        fingerExtended(
+            landmarks,
+            16,
+            14
+        )
     ) {
-
         count++;
-
     }
 
 
-    /*
-        PINKY
-    */
+    /* PINKY */
 
     if (
-        lm[20].y <
-        lm[18].y
+        fingerExtended(
+            landmarks,
+            20,
+            18
+        )
     ) {
-
         count++;
-
     }
 
 
-    /*
-        THUMB
-    */
+    /* THUMB */
+
+    const thumbTip =
+        landmarks[4];
+
+    const thumbIP =
+        landmarks[3];
+
+    const thumbMCP =
+        landmarks[2];
+
+
+    const thumbDistance =
+        distance(
+            thumbTip,
+            thumbMCP
+        );
+
+    const thumbIPDistance =
+        distance(
+            thumbIP,
+            thumbMCP
+        );
+
 
     if (
-        handedness === "Right"
+        thumbDistance >
+        thumbIPDistance * 1.25
     ) {
 
-        if (
-            lm[4].x <
-            lm[3].x
-        ) {
-
-            count++;
-
-        }
-
-    } else {
-
-        if (
-            lm[4].x >
-            lm[3].x
-        ) {
-
-            count++;
-
-        }
+        count++;
 
     }
 
@@ -794,53 +1018,32 @@ function countFingers(
 }
 
 
-/* --------------------------------
-   GESTURE
--------------------------------- */
+/* =========================================================
+   SCREEN POSITION
+========================================================= */
 
-function gestureFromCount(
-    fingers
-) {
-
-    if (fingers === 1)
-        return "one";
-
-    if (fingers === 2)
-        return "two";
-
-    if (fingers === 3)
-        return "three";
-
-    return "five";
-}
-
-
-/* --------------------------------
-   LANDMARK → SCREEN
--------------------------------- */
-
-function screenPoint(
-    p
-) {
+function handToScreen(point) {
 
     return {
 
         x:
-            (1 - p.x) * W,
+            (1 - point.x) *
+            width,
 
         y:
-            p.y * H
+            point.y *
+            height
 
     };
 
 }
 
 
-/* --------------------------------
-   PLANT
--------------------------------- */
+/* =========================================================
+   PLANT FLOWER
+========================================================= */
 
-function plant(
+function plantFlower(
     gesture,
     point
 ) {
@@ -850,8 +1053,8 @@ function plant(
 
 
     if (
-        now - lastFlower <
-        650
+        now - lastPlantTime <
+        800
     ) {
 
         return;
@@ -859,51 +1062,67 @@ function plant(
     }
 
 
-    lastFlower =
+    const flower =
+        FLOWER_TYPES[gesture];
+
+
+    if (!flower) {
+
+        return;
+
+    }
+
+
+    lastPlantTime =
         now;
 
 
-    const data =
-        FLOWERS[gesture];
+    flowerText.textContent =
+        flower.name;
 
+    meaningText.textContent =
+        flower.meaning;
 
-    if (!data)
-        return;
-
-
-    flowerName.textContent =
-        data.name;
-
-    flowerMeaning.textContent =
-        data.meaning;
-
-    flowerInfo.classList.add(
-        "visible"
+    info.classList.add(
+        "show"
     );
 
 
     flowers.push({
 
-        x: point.x,
+        x:
+            point.x,
 
-        y: point.y,
+        y:
+            point.y,
 
-        type: data.type,
+        type:
+            flower.type,
 
-        age: 0,
+        size:
+            0.7 +
+            Math.random() * 0.45,
 
         rotation:
             (
                 Math.random() -
                 0.5
-            ) * 0.35,
+            ) * 0.3,
 
-        scale:
-            0.85 +
-            Math.random() *
-            0.35
+        age:
+            0
 
     });
+
+
+    if (
+        flowers.length >
+        35
+    ) {
+
+        flowers.shift();
+
+    }
 
 
     createParticles(
@@ -911,21 +1130,12 @@ function plant(
         point.y
     );
 
-
-    if (
-        flowers.length >
-        45
-    ) {
-
-        flowers.shift();
-
-    }
 }
 
 
-/* --------------------------------
+/* =========================================================
    PARTICLES
--------------------------------- */
+========================================================= */
 
 function createParticles(
     x,
@@ -934,30 +1144,36 @@ function createParticles(
 
     for (
         let i = 0;
-        i < 15;
+        i < 18;
         i++
     ) {
 
         particles.push({
 
-            x,
+            x:
+                x,
 
-            y,
+            y:
+                y,
 
             vx:
                 (
                     Math.random() -
                     0.5
-                ) * 1.4,
+                ) * 1.8,
 
             vy:
-                -Math.random() * 1.5,
+                (
+                    Math.random() -
+                    0.8
+                ) * 1.5,
 
-            life: 1,
+            life:
+                1,
 
             size:
-                1 +
-                Math.random() * 2
+                0.7 +
+                Math.random() * 1.7
 
         });
 
@@ -966,18 +1182,18 @@ function createParticles(
 }
 
 
-/* --------------------------------
+/* =========================================================
    GLOW
--------------------------------- */
+========================================================= */
 
-function glow(
+function drawGlow(
     x,
     y,
     radius,
     alpha
 ) {
 
-    const g =
+    const gradient =
         ctx.createRadialGradient(
             x,
             y,
@@ -987,17 +1203,18 @@ function glow(
             radius
         );
 
-    g.addColorStop(
+    gradient.addColorStop(
         0,
         `rgba(255,255,255,${alpha})`
     );
 
-    g.addColorStop(
+    gradient.addColorStop(
         1,
         "rgba(255,255,255,0)"
     );
 
-    ctx.fillStyle = g;
+    ctx.fillStyle =
+        gradient;
 
     ctx.beginPath();
 
@@ -1010,52 +1227,18 @@ function glow(
     );
 
     ctx.fill();
+
 }
 
 
-/* --------------------------------
-   ROSE
--------------------------------- */
+/* =========================================================
+   STEM
+========================================================= */
 
-function drawRose(
-    x,
-    y,
-    s,
-    r
+function drawStem(
+    height,
+    curve
 ) {
-
-    ctx.save();
-
-    ctx.translate(
-        x,
-        y
-    );
-
-    ctx.rotate(r);
-
-    ctx.scale(s, s);
-
-
-    /*
-        glow
-    */
-
-    glow(
-        0,
-        0,
-        65,
-        0.045
-    );
-
-
-    /*
-        stem
-    */
-
-    ctx.strokeStyle =
-        "rgba(165,205,171,0.8)";
-
-    ctx.lineWidth = 1.4;
 
     ctx.beginPath();
 
@@ -1065,71 +1248,373 @@ function drawRose(
     );
 
     ctx.bezierCurveTo(
-        -4,
-        35,
-        5,
-        65,
+        curve,
+        height * 0.3,
+        -curve,
+        height * 0.7,
         0,
-        105
+        height
     );
 
     ctx.stroke();
 
+}
 
-    /*
-        petals
-    */
+
+/* =========================================================
+   ROSE
+========================================================= */
+
+function drawRose(
+    x,
+    y,
+    scale,
+    rotation
+) {
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(
+        rotation
+    );
+
+    ctx.scale(
+        scale,
+        scale
+    );
+
+
+    drawGlow(
+        0,
+        0,
+        70,
+        0.035
+    );
+
+
+    /* stem */
 
     ctx.strokeStyle =
-        "rgba(255,185,207,0.9)";
+        "rgba(142,184,150,0.75)";
 
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth =
+        1.2;
+
+    drawStem(
+        115,
+        9
+    );
+
+
+    /* petals */
+
+    ctx.strokeStyle =
+        "rgba(255,180,205,0.88)";
+
+    ctx.lineWidth =
+        1.05;
 
 
     for (
         let i = 0;
-        i < 11;
+        i < 10;
         i++
     ) {
 
-        const a =
+        const angle =
             i *
             Math.PI *
             2 /
-            11;
+            10;
 
-        const px =
-            Math.cos(a) *
-            20;
 
-        const py =
-            Math.sin(a) *
-            20;
+        ctx.save();
 
+        ctx.rotate(
+            angle
+        );
 
         ctx.beginPath();
 
         ctx.ellipse(
-            px,
-            py,
-            17,
-            25,
-            a,
+            0,
+            -22,
+            14,
+            24,
+            0,
             0,
             Math.PI * 2
         );
 
         ctx.stroke();
 
+        ctx.restore();
+
     }
 
 
-    /*
-        center
-    */
+    /* centre */
 
     ctx.fillStyle =
-        "rgba(255,205,219,0.9)";
+        "rgba(255,218,228,0.95)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        5,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   TULIP
+========================================================= */
+
+function drawTulip(
+    x,
+    y,
+    scale,
+    rotation
+) {
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(
+        rotation
+    );
+
+    ctx.scale(
+        scale,
+        scale
+    );
+
+
+    drawGlow(
+        0,
+        0,
+        65,
+        0.03
+    );
+
+
+    /* stem */
+
+    ctx.strokeStyle =
+        "rgba(142,190,151,0.78)";
+
+    ctx.lineWidth =
+        1.25;
+
+    drawStem(
+        115,
+        -7
+    );
+
+
+    /* tulip */
+
+    ctx.strokeStyle =
+        "rgba(246,177,198,0.9)";
+
+    ctx.lineWidth =
+        1.2;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        -27,
+        -5
+    );
+
+    ctx.bezierCurveTo(
+        -28,
+        -30,
+        -20,
+        -45,
+        -10,
+        -30
+    );
+
+    ctx.bezierCurveTo(
+        -3,
+        -55,
+        3,
+        -55,
+        10,
+        -30
+    );
+
+    ctx.bezierCurveTo(
+        20,
+        -45,
+        28,
+        -30,
+        27,
+        -5
+    );
+
+    ctx.bezierCurveTo(
+        22,
+        14,
+        -22,
+        14,
+        -27,
+        -5
+    );
+
+    ctx.stroke();
+
+
+    /* leaf */
+
+    ctx.strokeStyle =
+        "rgba(150,198,157,0.65)";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        0,
+        62
+    );
+
+    ctx.bezierCurveTo(
+        -20,
+        52,
+        -31,
+        70,
+        -37,
+        83
+    );
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   SUNFLOWER
+========================================================= */
+
+function drawSunflower(
+    x,
+    y,
+    scale,
+    rotation
+) {
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(
+        rotation
+    );
+
+    ctx.scale(
+        scale,
+        scale
+    );
+
+
+    drawGlow(
+        0,
+        0,
+        75,
+        0.035
+    );
+
+
+    /* stem */
+
+    ctx.strokeStyle =
+        "rgba(154,193,151,0.75)";
+
+    ctx.lineWidth =
+        1.2;
+
+    drawStem(
+        115,
+        6
+    );
+
+
+    /* petals */
+
+    ctx.strokeStyle =
+        "rgba(247,213,126,0.9)";
+
+    ctx.lineWidth =
+        1.15;
+
+
+    for (
+        let i = 0;
+        i < 16;
+        i++
+    ) {
+
+        const angle =
+            i *
+            Math.PI *
+            2 /
+            16;
+
+
+        ctx.save();
+
+        ctx.rotate(
+            angle
+        );
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            -27,
+            7,
+            23,
+            0,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+
+        ctx.restore();
+
+    }
+
+
+    /* centre */
+
+    ctx.fillStyle =
+        "rgba(218,171,87,0.9)";
 
     ctx.beginPath();
 
@@ -1145,18 +1630,19 @@ function drawRose(
 
 
     ctx.restore();
+
 }
 
 
-/* --------------------------------
-   IRIS
--------------------------------- */
+/* =========================================================
+   WILDFLOWERS
+========================================================= */
 
-function drawIris(
+function drawWildflowers(
     x,
     y,
-    s,
-    r
+    scale,
+    rotation
 ) {
 
     ctx.save();
@@ -1166,336 +1652,83 @@ function drawIris(
         y
     );
 
-    ctx.rotate(r);
+    ctx.rotate(
+        rotation
+    );
 
-    ctx.scale(s, s);
-
-
-    glow(
-        0,
-        0,
-        65,
-        0.04
+    ctx.scale(
+        scale,
+        scale
     );
 
 
-    ctx.strokeStyle =
-        "rgba(181,165,255,0.9)";
-
-    ctx.lineWidth =
-        1.3;
-
-
-    /*
-        stem
-    */
-
-    ctx.strokeStyle =
-        "rgba(160,198,165,0.75)";
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        0,
-        5
-    );
-
-    ctx.bezierCurveTo(
-        5,
-        40,
-        -5,
-        75,
-        0,
-        105
-    );
-
-    ctx.stroke();
-
-
-    /*
-        petals
-    */
-
-    ctx.strokeStyle =
-        "rgba(193,170,255,0.9)";
-
-
-    for (
-        let i = 0;
-        i < 6;
-        i++
-    ) {
-
-        const a =
-            i *
-            Math.PI *
-            2 /
-            6;
-
-        ctx.save();
-
-        ctx.rotate(a);
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            0
-        );
-
-        ctx.bezierCurveTo(
-            -25,
-            -15,
-            -28,
-            -42,
-            0,
-            -48
-        );
-
-        ctx.bezierCurveTo(
-            28,
-            -42,
-            25,
-            -15,
-            0,
-            0
-        );
-
-        ctx.stroke();
-
-        ctx.restore();
-
-    }
-
-
-    ctx.fillStyle =
-        "rgba(235,221,255,0.9)";
-
-    ctx.beginPath();
-
-    ctx.arc(
+    drawGlow(
         0,
         0,
-        5,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    ctx.restore();
-}
-
-
-/* --------------------------------
-   COSMOS
--------------------------------- */
-
-function drawCosmos(
-    x,
-    y,
-    s,
-    r
-) {
-
-    ctx.save();
-
-    ctx.translate(
-        x,
-        y
-    );
-
-    ctx.rotate(r);
-
-    ctx.scale(s, s);
-
-
-    glow(
-        0,
-        0,
-        70,
-        0.035
-    );
-
-
-    /*
-        stem
-    */
-
-    ctx.strokeStyle =
-        "rgba(158,203,168,0.75)";
-
-    ctx.lineWidth =
-        1.2;
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        0,
-        5
-    );
-
-    ctx.bezierCurveTo(
-        -4,
-        35,
-        4,
-        70,
-        0,
-        105
-    );
-
-    ctx.stroke();
-
-
-    /*
-        petals
-    */
-
-    ctx.strokeStyle =
-        "rgba(255,208,228,0.85)";
-
-
-    for (
-        let i = 0;
-        i < 8;
-        i++
-    ) {
-
-        const a =
-            i *
-            Math.PI *
-            2 /
-            8;
-
-        ctx.save();
-
-        ctx.rotate(a);
-
-        ctx.beginPath();
-
-        ctx.ellipse(
-            0,
-            -27,
-            10,
-            27,
-            0,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.stroke();
-
-        ctx.restore();
-
-    }
-
-
-    ctx.fillStyle =
-        "rgba(255,224,161,0.9)";
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        0,
-        6,
-        0,
-        Math.PI * 2
-    );
-
-    ctx.fill();
-
-
-    ctx.restore();
-}
-
-
-/* --------------------------------
-   WILDFLOWER
--------------------------------- */
-
-function drawWildflower(
-    x,
-    y,
-    s,
-    r
-) {
-
-    ctx.save();
-
-    ctx.translate(
-        x,
-        y
-    );
-
-    ctx.rotate(r);
-
-    ctx.scale(s, s);
-
-
-    glow(
-        0,
-        0,
-        70,
-        0.035
+        80,
+        0.03
     );
 
 
     const colours = [
-        "rgba(255,194,214,0.9)",
-        "rgba(204,183,255,0.9)",
-        "rgba(255,224,167,0.9)",
-        "rgba(188,235,204,0.9)"
+
+        "rgba(255,189,211,0.9)",
+
+        "rgba(190,180,255,0.9)",
+
+        "rgba(255,222,155,0.9)",
+
+        "rgba(185,228,197,0.9)"
+
     ];
 
 
-    /*
-        multiple stems
-    */
-
     for (
-        let i = 0;
-        i < 5;
-        i++
+        let stem = 0;
+        stem < 5;
+        stem++
     ) {
 
         const offset =
-            (i - 2) * 13;
+            (stem - 2) * 14;
+
+
+        const flowerY =
+            -25 -
+            Math.abs(stem - 2) * 6;
 
 
         ctx.strokeStyle =
-            "rgba(158,204,165,0.7)";
+            "rgba(148,193,155,0.68)";
 
         ctx.lineWidth =
-            1;
+            0.9;
 
 
         ctx.beginPath();
 
         ctx.moveTo(
-            offset,
+            0,
             0
         );
 
         ctx.bezierCurveTo(
-            offset - 4,
+            offset * 0.3,
             35,
-            offset + 5,
-            65,
             offset,
-            105
+            70,
+            offset,
+            115
         );
 
         ctx.stroke();
 
 
-        /*
-            little flower
-        */
-
         ctx.strokeStyle =
-            colours[i % 4];
+            colours[
+                stem %
+                colours.length
+            ];
 
 
         for (
@@ -1504,7 +1737,7 @@ function drawWildflower(
             p++
         ) {
 
-            const a =
+            const angle =
                 p *
                 Math.PI *
                 2 /
@@ -1515,10 +1748,12 @@ function drawWildflower(
 
             ctx.translate(
                 offset,
-                0
+                flowerY
             );
 
-            ctx.rotate(a);
+            ctx.rotate(
+                angle
+            );
 
             ctx.beginPath();
 
@@ -1526,7 +1761,7 @@ function drawWildflower(
                 0,
                 -8,
                 4,
-                9,
+                10,
                 0,
                 0,
                 Math.PI * 2
@@ -1542,103 +1777,110 @@ function drawWildflower(
 
 
     ctx.restore();
+
 }
 
 
-/* --------------------------------
-   DRAW
--------------------------------- */
+/* =========================================================
+   DRAW FLOWERS
+========================================================= */
 
 function drawFlowers() {
 
     for (
-        const f of flowers
+        const flower
+        of flowers
     ) {
 
-        f.age +=
+        flower.age +=
             0.018;
 
 
         const growth =
             Math.min(
-                f.age * 2.5,
+                flower.age * 2,
                 1
             );
 
 
-        const s =
-            f.scale *
+        const scale =
+            flower.size *
             growth;
 
 
         const sway =
             Math.sin(
-                f.age * 2.5
+                flower.age * 2
             ) * 2;
 
 
         if (
-            f.type === "rose"
+            flower.type ===
+            "rose"
         ) {
 
             drawRose(
-                f.x,
-                f.y + sway,
-                s,
-                f.rotation
+                flower.x,
+                flower.y + sway,
+                scale,
+                flower.rotation
             );
 
         }
 
 
         if (
-            f.type === "iris"
+            flower.type ===
+            "tulip"
         ) {
 
-            drawIris(
-                f.x,
-                f.y + sway,
-                s,
-                f.rotation
+            drawTulip(
+                flower.x,
+                flower.y + sway,
+                scale,
+                flower.rotation
             );
 
         }
 
 
         if (
-            f.type === "cosmos"
+            flower.type ===
+            "sunflower"
         ) {
 
-            drawCosmos(
-                f.x,
-                f.y + sway,
-                s,
-                f.rotation
+            drawSunflower(
+                flower.x,
+                flower.y + sway,
+                scale,
+                flower.rotation
             );
 
         }
 
 
         if (
-            f.type === "wild"
+            flower.type ===
+            "wild"
         ) {
 
-            drawWildflower(
-                f.x,
-                f.y + sway,
-                s,
-                f.rotation
+            drawWildflowers(
+                flower.x,
+                flower.y + sway,
+                scale,
+                flower.rotation
             );
 
         }
 
     }
+
 }
 
 
-/* --------------------------------
+/* =========================================================
    PARTICLES
--------------------------------- */
+========================================================= */
 
 function drawParticles() {
 
@@ -1655,13 +1897,17 @@ function drawParticles() {
             particles[i];
 
 
-        p.x += p.vx;
+        p.x +=
+            p.vx;
 
-        p.y += p.vy;
+        p.y +=
+            p.vy;
 
-        p.vy += 0.008;
+        p.vy +=
+            0.01;
 
-        p.life -= 0.014;
+        p.life -=
+            0.012;
 
 
         if (
@@ -1681,16 +1927,16 @@ function drawParticles() {
         ctx.save();
 
         ctx.globalAlpha =
-            p.life * 0.7;
+            p.life * 0.65;
 
         ctx.fillStyle =
-            "white";
+            "#ffffff";
 
         ctx.shadowBlur =
             12;
 
         ctx.shadowColor =
-            "white";
+            "#ffffff";
 
 
         ctx.beginPath();
@@ -1708,20 +1954,21 @@ function drawParticles() {
         ctx.restore();
 
     }
+
 }
 
 
-/* --------------------------------
-   ANIMATION
--------------------------------- */
+/* =========================================================
+   RENDER LOOP
+========================================================= */
 
-function animate() {
+function render() {
 
     ctx.clearRect(
         0,
         0,
-        W,
-        H
+        width,
+        height
     );
 
 
@@ -1731,27 +1978,28 @@ function animate() {
 
 
     requestAnimationFrame(
-        animate
+        render
     );
 
 }
 
-animate();
+render();
 
 
-/* --------------------------------
-   DETECTION LOOP
--------------------------------- */
+/* =========================================================
+   DETECTION
+========================================================= */
 
-async function detect() {
+async function detectHands() {
 
     if (
-        !handLandmarker ||
-        video.readyState < 2
+        !tracker ||
+        camera.readyState <
+        2
     ) {
 
         requestAnimationFrame(
-            detect
+            detectHands
         );
 
         return;
@@ -1760,30 +2008,34 @@ async function detect() {
 
 
     if (
-        video.currentTime !==
+        camera.currentTime !==
         lastVideoTime
     ) {
 
         lastVideoTime =
-            video.currentTime;
+            camera.currentTime;
 
 
         try {
 
             const result =
-                handLandmarker
-                .detectForVideo(
-                    video,
+                tracker.detectForVideo(
+                    camera,
                     performance.now()
                 );
 
 
             if (
                 result.landmarks &&
-                result.landmarks.length
+                result.landmarks.length >
+                0
             ) {
 
-                const lm =
+                handVisible =
+                    true;
+
+
+                const landmarks =
                     result.landmarks[0];
 
 
@@ -1806,49 +2058,84 @@ async function detect() {
 
                 const fingers =
                     countFingers(
-                        lm,
+                        landmarks,
                         handedness
                     );
 
 
-                const gesture =
-                    gestureFromCount(
-                        fingers
+                const flower =
+                    FLOWER_TYPES[fingers];
+
+
+                if (flower) {
+
+                    if (
+                        fingers !==
+                        lastGesture
+                    ) {
+
+                        lastGesture =
+                            fingers;
+
+                        flowerText.textContent =
+                            flower.name;
+
+                        meaningText.textContent =
+                            flower.meaning;
+
+                        info.classList.add(
+                            "show"
+                        );
+
+                    }
+
+
+                    /*
+                       Index fingertip
+                       is the planting point
+                    */
+
+                    const point =
+                        handToScreen(
+                            landmarks[8]
+                        );
+
+
+                    plantFlower(
+                        fingers,
+                        point
                     );
+
+                }
 
 
                 /*
-                    INDEX FINGER
-                    becomes cursor
+                    Cursor glow
                 */
 
-                const point =
-                    screenPoint(
-                        lm[8]
+                const cursor =
+                    handToScreen(
+                        landmarks[8]
                     );
 
-
-                /*
-                    Small cursor glow
-                */
 
                 ctx.save();
 
                 ctx.fillStyle =
-                    "rgba(255,255,255,0.8)";
+                    "rgba(255,255,255,0.85)";
 
                 ctx.shadowBlur =
-                    18;
+                    20;
 
                 ctx.shadowColor =
-                    "white";
+                    "rgba(255,255,255,0.8)";
 
                 ctx.beginPath();
 
                 ctx.arc(
-                    point.x,
-                    point.y,
-                    2,
+                    cursor.x,
+                    cursor.y,
+                    1.8,
                     0,
                     Math.PI * 2
                 );
@@ -1858,18 +2145,25 @@ async function detect() {
                 ctx.restore();
 
 
-                plant(
-                    gesture,
-                    point
+                hint.classList.add(
+                    "hide"
                 );
+
+            } else {
+
+                handVisible =
+                    false;
+
+                lastGesture =
+                    null;
 
             }
 
-        } catch (error) {
+        } catch (err) {
 
             console.error(
-                "Detection error:",
-                error
+                "Hand detection:",
+                err
             );
 
         }
@@ -1878,64 +2172,68 @@ async function detect() {
 
 
     requestAnimationFrame(
-        detect
+        detectHands
     );
+
 }
 
 
-/* --------------------------------
-   START EXPERIENCE
--------------------------------- */
+/* =========================================================
+   START
+========================================================= */
 
-startButton.addEventListener(
+enter.addEventListener(
     "click",
     async () => {
 
-        startButton.disabled =
+        enter.disabled =
             true;
 
-        startButton.textContent =
-            "LOADING";
+        enter.textContent =
+            "INITIALISING";
 
 
         try {
 
+            status.textContent =
+                "CAMERA";
+
+
             /*
-                CAMERA FIRST
+                1.
+                CAMERA
             */
 
-            await startCamera();
+            await openCamera();
 
+
+            /*
+                2.
+                MEDIAPIPE
+            */
 
             status.textContent =
-                "INITIALISING";
+                "TRACKING";
+
+
+            await createTracker();
 
 
             /*
-                TRACKER SECOND
+                3.
+                EXPERIENCE
             */
-
-            await createHandTracker();
-
 
             status.textContent =
                 "LIVE";
 
-
-            /*
-                REMOVE INTRO
-            */
 
             intro.classList.add(
                 "hidden"
             );
 
 
-            /*
-                START DETECTION
-            */
-
-            detect();
+            detectHands();
 
 
         } catch (error) {
@@ -1945,20 +2243,20 @@ startButton.addEventListener(
             );
 
 
-            startButton.disabled =
+            status.textContent =
+                "ERROR";
+
+
+            errorBox.classList.add(
+                "visible"
+            );
+
+
+            enter.disabled =
                 false;
 
-            startButton.textContent =
+            enter.textContent =
                 "TRY AGAIN";
-
-
-            status.textContent =
-                "CAMERA ERROR";
-
-
-            alert(
-                "Camera could not be opened. Please allow camera access for this site and try again."
-            );
 
         }
 
