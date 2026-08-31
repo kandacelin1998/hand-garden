@@ -2,342 +2,780 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
 <title>HAND / GARDEN</title>
 
 <style>
-*{box-sizing:border-box}
 
-html,body{
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
     margin:0;
     width:100%;
     height:100%;
     overflow:hidden;
     background:#000;
     color:#fff;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
 }
+
+/* =====================================================
+   CAMERA
+===================================================== */
 
 #video{
+
     position:fixed;
+
     inset:0;
+
     width:100%;
     height:100%;
+
     object-fit:cover;
+
     transform:scaleX(-1);
+
     opacity:0;
-    transition:opacity 1s ease;
-    filter:
-        brightness(1.12)
-        contrast(.92)
-        saturate(1.08)
-        blur(.35px);
+
+    transition:
+        opacity 1s ease;
+
     z-index:1;
+
+    /*
+       Soft Japanese photobooth look.
+       Bright but not washed out.
+    */
+
+    filter:
+        brightness(1.14)
+        contrast(.90)
+        saturate(1.05)
+        blur(.32px);
 }
 
-#video.live{opacity:1}
+#video.live{
+    opacity:1;
+}
+
+
+/* =====================================================
+   CAMERA SOFT LIGHT
+===================================================== */
 
 #beautyGlow{
+
     position:fixed;
+
     inset:0;
+
     z-index:2;
+
     pointer-events:none;
+
     background:
+
         radial-gradient(
-            ellipse at center,
-            rgba(255,255,255,.11) 0%,
-            rgba(255,255,255,.035) 42%,
-            rgba(255,255,255,0) 72%
+            ellipse at 50% 42%,
+            rgba(255,255,255,.14) 0%,
+            rgba(255,255,255,.065) 30%,
+            rgba(255,255,255,.018) 52%,
+            rgba(255,255,255,0) 76%
         );
+
     mix-blend-mode:screen;
+
+    opacity:.9;
 }
 
-#canvas{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    z-index:4;
-    pointer-events:none;
-}
+
+/* =====================================================
+   VIGNETTE
+===================================================== */
 
 #shade{
+
     position:fixed;
+
     inset:0;
+
     z-index:5;
+
     pointer-events:none;
+
     background:
+
         radial-gradient(
             ellipse at center,
             rgba(0,0,0,0) 35%,
-            rgba(0,0,0,.25) 100%
+            rgba(0,0,0,.23) 100%
         );
 }
 
-#top{
+
+/* =====================================================
+   FLOWER CANVAS
+===================================================== */
+
+#canvas{
+
     position:fixed;
-    top:25px;
-    left:28px;
-    right:28px;
-    z-index:20;
-    display:flex;
-    justify-content:space-between;
-    font-family:"SFMono-Regular",Consolas,monospace;
-    font-size:9px;
-    letter-spacing:.25em;
-    color:rgba(255,255,255,.62);
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    z-index:4;
+
+    pointer-events:none;
 }
 
-.dim{color:rgba(255,255,255,.22)}
+
+/* =====================================================
+   TOP UI
+===================================================== */
+
+#top{
+
+    position:fixed;
+
+    top:24px;
+
+    left:28px;
+    right:28px;
+
+    z-index:20;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size:9px;
+
+    letter-spacing:.26em;
+
+    color:
+        rgba(255,255,255,.65);
+}
+
+.dim{
+    color:
+        rgba(255,255,255,.20);
+}
+
+
+/* =====================================================
+   FLOWER INFO
+===================================================== */
 
 #info{
+
     position:fixed;
+
     left:28px;
-    bottom:27px;
+
+    bottom:28px;
+
     z-index:20;
+
     opacity:0;
-    transform:translateY(8px);
-    transition:opacity .6s ease,transform .6s ease;
+
+    transform:
+        translateY(10px);
+
+    transition:
+        opacity .65s ease,
+        transform .65s ease;
+
     pointer-events:none;
 }
 
 #info.show{
+
     opacity:1;
-    transform:translateY(0);
+
+    transform:
+        translateY(0);
 }
 
 #flower{
-    font-family:Georgia,"Times New Roman",serif;
-    font-size:27px;
-    letter-spacing:-.025em;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:28px;
+
+    letter-spacing:-.03em;
 }
 
 #meaning{
+
     margin-top:6px;
-    font-family:"SFMono-Regular",Consolas,monospace;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
     font-size:8px;
-    letter-spacing:.23em;
-    color:rgba(255,255,255,.42);
+
+    letter-spacing:.24em;
+
+    color:
+        rgba(255,255,255,.42);
 }
+
+
+/* =====================================================
+   GESTURE STATUS
+===================================================== */
 
 #gesture{
+
     position:fixed;
+
     right:28px;
-    bottom:28px;
+
+    bottom:29px;
+
     z-index:20;
-    font-family:"SFMono-Regular",Consolas,monospace;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
     font-size:8px;
-    letter-spacing:.2em;
-    color:rgba(255,255,255,.32);
+
+    letter-spacing:.20em;
+
+    color:
+        rgba(255,255,255,.34);
+
+    text-align:right;
 }
 
+
+/* =====================================================
+   INTRO
+===================================================== */
+
 #intro{
+
     position:fixed;
+
     inset:0;
+
     z-index:50;
+
     display:flex;
+
     align-items:center;
+
     justify-content:center;
+
     flex-direction:column;
+
     background:#000;
-    transition:opacity .8s ease;
+
+    transition:
+        opacity .8s ease;
 }
 
 #intro.hide{
+
     opacity:0;
+
     pointer-events:none;
 }
 
 #title{
+
     margin:0;
-    font-family:Georgia,"Times New Roman",serif;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
     font-weight:400;
-    font-size:clamp(52px,9vw,120px);
-    line-height:.85;
+
+    font-size:
+        clamp(52px,9vw,120px);
+
+    line-height:.86;
+
     letter-spacing:-.055em;
 }
 
 #subtitle{
+
     margin-top:20px;
-    font-family:"SFMono-Regular",Consolas,monospace;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
     font-size:8px;
+
     letter-spacing:.35em;
-    color:rgba(255,255,255,.3);
+
+    color:
+        rgba(255,255,255,.31);
+
     text-transform:uppercase;
 }
 
 #enter{
+
     margin-top:48px;
-    padding:13px 30px;
-    border:1px solid rgba(255,255,255,.3);
-    background:transparent;
-    color:white;
-    font-family:"SFMono-Regular",Consolas,monospace;
+
+    padding:
+        13px 31px;
+
+    border:
+        1px solid rgba(255,255,255,.28);
+
+    background:
+        transparent;
+
+    color:#fff;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
     font-size:8px;
+
     letter-spacing:.25em;
+
     cursor:pointer;
-    transition:background .25s ease,color .25s ease;
+
+    transition:
+        background .25s ease,
+        color .25s ease,
+        border .25s ease;
 }
 
 #enter:hover{
-    background:white;
+
+    background:#fff;
+
     color:#000;
+
+    border-color:#fff;
 }
 
 #enter:disabled{
-    opacity:.5;
+
+    opacity:.45;
+
+    cursor:wait;
 }
+
+
+/* =====================================================
+   LOADING
+===================================================== */
 
 #loading{
+
     position:fixed;
+
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%);
+
+    transform:
+        translate(-50%,-50%);
+
     z-index:60;
+
     display:none;
-    font-family:"SFMono-Regular",Consolas,monospace;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
     font-size:9px;
-    letter-spacing:.2em;
-    color:rgba(255,255,255,.55);
+
+    letter-spacing:.22em;
+
+    color:
+        rgba(255,255,255,.55);
 }
 
-#loading.show{display:block}
+#loading.show{
+    display:block;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
 
 #error{
+
     position:fixed;
+
     left:50%;
     top:50%;
-    transform:translate(-50%,-50%);
+
+    transform:
+        translate(-50%,-50%);
+
     z-index:100;
+
     width:360px;
+
     max-width:85vw;
+
     text-align:center;
+
     display:none;
-    font-family:"SFMono-Regular",Consolas,monospace;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
     font-size:9px;
+
     line-height:1.8;
-    color:rgba(255,255,255,.45);
+
+    color:
+        rgba(255,255,255,.45);
 }
 
-#error.show{display:block}
+#error.show{
+    display:block;
+}
 
 #error strong{
+
     display:block;
+
     margin-bottom:12px;
-    color:white;
-    letter-spacing:.2em;
+
+    color:#fff;
+
+    letter-spacing:.20em;
 }
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:600px){
+
+    #top{
+
+        left:18px;
+        right:18px;
+        top:18px;
+    }
+
+    #info{
+
+        left:18px;
+        bottom:21px;
+    }
+
+    #gesture{
+
+        right:18px;
+        bottom:22px;
+    }
+}
+
 </style>
 </head>
 
+
 <body>
 
-<video id="video" autoplay muted playsinline></video>
+
+<!-- ===================================================
+     CAMERA
+=================================================== -->
+
+<video
+    id="video"
+    autoplay
+    muted
+    playsinline>
+</video>
+
 <div id="beautyGlow"></div>
+
 <canvas id="canvas"></canvas>
+
 <div id="shade"></div>
 
+
+<!-- ===================================================
+     UI
+=================================================== -->
+
 <div id="top">
-    <div>HAND <span class="dim">/</span> GARDEN</div>
-    <div id="status">OFFLINE</div>
+
+    <div>
+        HAND
+        <span class="dim">/</span>
+        GARDEN
+    </div>
+
+    <div id="status">
+        OFFLINE
+    </div>
+
 </div>
+
 
 <div id="info">
-    <div id="flower">Rose</div>
-    <div id="meaning">LOVE · COURAGE</div>
+
+    <div id="flower">
+        Rose
+    </div>
+
+    <div id="meaning">
+        LOVE · COURAGE
+    </div>
+
 </div>
 
-<div id="gesture">SHOW YOUR HAND</div>
+
+<div id="gesture">
+    SHOW YOUR HAND
+</div>
+
+
+<!-- ===================================================
+     INTRO
+=================================================== -->
 
 <div id="intro">
-    <h1 id="title">Hand Garden</h1>
-    <div id="subtitle">A gesture becomes a flower</div>
-    <button id="enter">ENTER</button>
+
+    <h1 id="title">
+        Hand Garden
+    </h1>
+
+    <div id="subtitle">
+        A gesture becomes a flower
+    </div>
+
+    <button id="enter">
+        ENTER
+    </button>
+
 </div>
 
-<div id="loading">INITIALISING</div>
+
+<div id="loading">
+    INITIALISING
+</div>
+
 
 <div id="error">
-    <strong>CAMERA UNAVAILABLE</strong>
-    Please allow camera access and reload the page.
+
+    <strong>
+        CAMERA UNAVAILABLE
+    </strong>
+
+    Please allow camera access
+    and reload the page.
+
 </div>
 
 
 <script type="module">
 
+
+/* =====================================================
+   MEDIAPIPE
+===================================================== */
+
 import {
     FilesetResolver,
     HandLandmarker
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.mjs";
+}
+from
+"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs";
 
 
-const video=document.getElementById("video");
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+/* =====================================================
+   DOM
+===================================================== */
 
-const intro=document.getElementById("intro");
-const enter=document.getElementById("enter");
-const loading=document.getElementById("loading");
-const errorBox=document.getElementById("error");
+const video =
+    document.getElementById("video");
 
-const status=document.getElementById("status");
-const info=document.getElementById("info");
-const flower=document.getElementById("flower");
-const meaning=document.getElementById("meaning");
-const gesture=document.getElementById("gesture");
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+const intro =
+    document.getElementById("intro");
+
+const enter =
+    document.getElementById("enter");
+
+const loading =
+    document.getElementById("loading");
+
+const errorBox =
+    document.getElementById("error");
+
+const status =
+    document.getElementById("status");
+
+const info =
+    document.getElementById("info");
+
+const flower =
+    document.getElementById("flower");
+
+const meaning =
+    document.getElementById("meaning");
+
+const gesture =
+    document.getElementById("gesture");
 
 
 /* =====================================================
    CANVAS
 ===================================================== */
 
-let W=innerWidth;
-let H=innerHeight;
+let W =
+    window.innerWidth;
+
+let H =
+    window.innerHeight;
+
+let DPR =
+    Math.min(
+        window.devicePixelRatio || 1,
+        2
+    );
+
 
 function resize(){
 
-    W=innerWidth;
-    H=innerHeight;
+    W =
+        window.innerWidth;
 
-    const dpr=Math.min(devicePixelRatio||1,2);
+    H =
+        window.innerHeight;
 
-    canvas.width=W*dpr;
-    canvas.height=H*dpr;
+    DPR =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
 
-    canvas.style.width=W+"px";
-    canvas.style.height=H+"px";
+    canvas.width =
+        W * DPR;
 
-    ctx.setTransform(dpr,0,0,dpr,0,0);
+    canvas.height =
+        H * DPR;
+
+    canvas.style.width =
+        W + "px";
+
+    canvas.style.height =
+        H + "px";
+
+    ctx.setTransform(
+        DPR,
+        0,
+        0,
+        DPR,
+        0,
+        0
+    );
 }
+
 
 resize();
 
-addEventListener("resize",resize);
+window.addEventListener(
+    "resize",
+    resize
+);
 
 
 /* =====================================================
-   STATE
+   GLOBAL STATE
 ===================================================== */
 
-let handLandmarker=null;
-let lastVideoTime=-1;
+let handLandmarker = null;
 
-let candidate=null;
-let candidateFrames=0;
+let trackerReady = false;
 
-let confirmed=null;
+let cameraReady = false;
 
-let lastPlant=0;
+let running = false;
 
-const plants=[];
-const particles=[];
+let detectionBusy = false;
+
+
+/*
+   Gesture stabilisation.
+*/
+
+let candidateGesture = null;
+
+let candidateFrames = 0;
+
+let confirmedGesture = null;
+
+
+/*
+   Flower timing.
+*/
+
+let lastPlantTime = 0;
+
+
+/*
+   Visual objects.
+*/
+
+const plants = [];
+
+const particles = [];
 
 
 /* =====================================================
-   FLOWERS
+   FLOWER DATA
 ===================================================== */
 
-const FLOWERS={
+const FLOWERS = {
 
     1:{
         name:"Rose",
@@ -368,6 +806,7 @@ const FLOWERS={
         meaning:"FREEDOM · GRATITUDE",
         type:"wild"
     }
+
 };
 
 
@@ -375,69 +814,126 @@ const FLOWERS={
    CAMERA
 ===================================================== */
 
-async function openCamera(){
+async function startCamera(){
 
-    if(!navigator.mediaDevices?.getUserMedia){
-        throw new Error("Camera unavailable");
+    if(
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ){
+
+        throw new Error(
+            "Camera API unavailable"
+        );
     }
 
-    const stream=await navigator.mediaDevices.getUserMedia({
 
-        video:{
-            facingMode:"user",
-            width:{ideal:1920},
-            height:{ideal:1080},
-            frameRate:{ideal:30}
-        },
+    const stream =
+        await navigator.mediaDevices.getUserMedia({
 
-        audio:false
-    });
+            audio:false,
 
-    video.srcObject=stream;
+            video:{
 
-    await new Promise(resolve=>{
-        video.onloadedmetadata=resolve;
-    });
+                facingMode:{
+                    ideal:"user"
+                },
+
+                width:{
+                    ideal:1920
+                },
+
+                height:{
+                    ideal:1080
+                },
+
+                frameRate:{
+                    ideal:30,
+                    max:30
+                }
+            }
+        });
+
+
+    video.srcObject =
+        stream;
+
+
+    await new Promise(
+        resolve => {
+
+            if(
+                video.readyState >= 1
+            ){
+
+                resolve();
+
+            }else{
+
+                video.onloadedmetadata =
+                    resolve;
+            }
+        }
+    );
+
 
     await video.play();
 
-    video.classList.add("live");
+
+    cameraReady = true;
+
+    video.classList.add(
+        "live"
+    );
 }
 
 
 /* =====================================================
-   MEDIAPIPE
+   MEDIAPIPE INITIALISATION
 ===================================================== */
 
-async function createTracker(){
+async function startTracker(){
 
-    const vision=
+    const vision =
         await FilesetResolver.forVisionTasks(
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm"
+
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
         );
 
-    handLandmarker=
+
+    handLandmarker =
         await HandLandmarker.createFromOptions(
+
             vision,
+
             {
+
                 baseOptions:{
+
                     modelAssetPath:
                     "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
 
                     delegate:"GPU"
                 },
 
+
                 runningMode:"VIDEO",
 
                 numHands:1,
 
-                minHandDetectionConfidence:.50,
 
-                minHandPresenceConfidence:.50,
+                minHandDetectionConfidence:
+                    .45,
 
-                minTrackingConfidence:.50
+                minHandPresenceConfidence:
+                    .45,
+
+                minTrackingConfidence:
+                    .45
             }
         );
+
+
+    trackerReady = true;
 }
 
 
@@ -445,7 +941,7 @@ async function createTracker(){
    GEOMETRY
 ===================================================== */
 
-function dist(a,b){
+function distance(a,b){
 
     return Math.hypot(
         a.x-b.x,
@@ -456,31 +952,60 @@ function dist(a,b){
 
 function angle(a,b,c){
 
-    const abx=a.x-b.x;
-    const aby=a.y-b.y;
+    const abx =
+        a.x-b.x;
 
-    const cbx=c.x-b.x;
-    const cby=c.y-b.y;
+    const aby =
+        a.y-b.y;
 
-    const dot=abx*cbx+aby*cby;
+    const cbx =
+        c.x-b.x;
 
-    const mag=
-        Math.hypot(abx,aby)*
-        Math.hypot(cbx,cby);
+    const cby =
+        c.y-b.y;
 
-    if(!mag)return 0;
+
+    const dot =
+        abx*cbx+
+        aby*cby;
+
+
+    const magnitude =
+
+        Math.hypot(
+            abx,
+            aby
+        ) *
+
+        Math.hypot(
+            cbx,
+            cby
+        );
+
+
+    if(
+        magnitude === 0
+    ){
+        return 0;
+    }
+
 
     return Math.acos(
+
         Math.max(
             -1,
-            Math.min(1,dot/mag)
+            Math.min(
+                1,
+                dot/magnitude
+            )
         )
-    )*180/Math.PI;
+
+    ) * 180 / Math.PI;
 }
 
 
 /* =====================================================
-   LONG FINGER
+   LONG FINGER CLASSIFICATION
 ===================================================== */
 
 function longFingerOpen(
@@ -491,149 +1016,184 @@ function longFingerOpen(
     tip
 ){
 
-    const pipAngle=
+    const a =
         angle(
             lm[mcp],
             lm[pip],
             lm[dip]
         );
 
-    const dipAngle=
+
+    const b =
         angle(
             lm[pip],
             lm[dip],
             lm[tip]
         );
 
-    const length=
-        dist(
+
+    /*
+       Finger length.
+    */
+
+    const full =
+        distance(
             lm[mcp],
             lm[tip]
         );
 
-    const middleLength=
-        dist(
+
+    const partial =
+        distance(
             lm[mcp],
             lm[dip]
         );
 
-    /*
-       Two independent conditions.
 
-       1. joints are relatively straight
-       2. fingertip is clearly beyond DIP
+    /*
+       A finger is open only when:
+
+       - both joints are straight
+       - fingertip is sufficiently extended
     */
 
-    return(
-        pipAngle>150 &&
-        dipAngle>145 &&
-        length>middleLength*1.12
+    return (
+
+        a > 148 &&
+
+        b > 143 &&
+
+        full >
+        partial * 1.105
     );
 }
 
 
 /* =====================================================
-   THUMB — SPECIAL
+   THUMB CLASSIFICATION
 ===================================================== */
 
-function thumbState(lm){
+/*
+   Thumb is deliberately treated differently.
 
-    const pipAngle=
+   We compare its geometry against the
+   palm rather than just looking at x/y.
+*/
+
+function thumbOpen(lm){
+
+    const thumbAngle =
         angle(
             lm[2],
             lm[3],
             lm[4]
         );
 
-    const palmWidth=
-        dist(
+
+    const palmWidth =
+        distance(
             lm[5],
             lm[17]
         );
 
-    /*
-       Vector from index MCP
-       to thumb tip.
 
-       This is much more stable
-       than only using x distance.
-    */
-
-    const thumbToIndex=
-        dist(
+    const thumbTipToIndexMCP =
+        distance(
             lm[4],
             lm[5]
         );
 
 
+    const thumbTipToPalm =
+        distance(
+            lm[4],
+            lm[0]
+        );
+
+
+    const spread =
+        thumbTipToIndexMCP /
+        Math.max(
+            palmWidth,
+            .0001
+        );
+
+
+    const palmSpread =
+        thumbTipToPalm /
+        Math.max(
+            palmWidth,
+            .0001
+        );
+
+
     /*
-       Folded thumb tends to stay
-       close to index MCP / palm.
+       Strong open thumb.
+
+       Both conditions matter.
     */
 
-    const spread=
-        thumbToIndex/
-        palmWidth;
+    return (
 
+        thumbAngle > 135 &&
 
-    if(
-        pipAngle>145 &&
-        spread>.58
-    ){
+        spread > .58 &&
 
-        return true;
-    }
-
-
-    return false;
+        palmSpread > .72
+    );
 }
 
 
 /* =====================================================
-   CLASSIFY GESTURE
+   GESTURE CLASSIFIER
 ===================================================== */
 
-function classify(lm){
+function classifyGesture(lm){
 
-    const index=
+    const index =
         longFingerOpen(
-            lm,5,6,7,8
+            lm,
+            5,6,7,8
         );
 
-    const middle=
+
+    const middle =
         longFingerOpen(
-            lm,9,10,11,12
+            lm,
+            9,10,11,12
         );
 
-    const ring=
+
+    const ring =
         longFingerOpen(
-            lm,13,14,15,16
+            lm,
+            13,14,15,16
         );
 
-    const pinky=
+
+    const pinky =
         longFingerOpen(
-            lm,17,18,19,20
+            lm,
+            17,18,19,20
         );
 
-    const thumb=
-        thumbState(lm);
+
+    const thumb =
+        thumbOpen(lm);
 
 
     /*
-       =================================================
-       5 FINGERS
-       =================================================
-
-       All four long fingers +
-       a clearly separated thumb.
+       -----------------------------------------------
+       OPEN PALM
+       -----------------------------------------------
     */
 
     if(
+        thumb &&
         index &&
         middle &&
         ring &&
-        pinky &&
-        thumb
+        pinky
     ){
 
         return 5;
@@ -641,24 +1201,23 @@ function classify(lm){
 
 
     /*
-       =================================================
-       4 FINGERS
-       =================================================
+       -----------------------------------------------
+       FOUR
+       -----------------------------------------------
 
-       Four long fingers open
-       while thumb remains folded.
+       Four long fingers open,
+       thumb clearly folded.
 
-       IMPORTANT:
-       this is checked BEFORE
-       lower gestures.
+       This is deliberately checked
+       before 3 / 2 / 1.
     */
 
     if(
+        !thumb &&
         index &&
         middle &&
         ring &&
-        pinky &&
-        !thumb
+        pinky
     ){
 
         return 4;
@@ -666,7 +1225,9 @@ function classify(lm){
 
 
     /*
-       3
+       -----------------------------------------------
+       THREE
+       -----------------------------------------------
     */
 
     if(
@@ -681,7 +1242,9 @@ function classify(lm){
 
 
     /*
-       2
+       -----------------------------------------------
+       TWO
+       -----------------------------------------------
     */
 
     if(
@@ -696,7 +1259,9 @@ function classify(lm){
 
 
     /*
-       1
+       -----------------------------------------------
+       ONE
+       -----------------------------------------------
     */
 
     if(
@@ -711,9 +1276,7 @@ function classify(lm){
 
 
     /*
-       UNCERTAIN
-
-       Don't guess.
+       No confident gesture.
     */
 
     return null;
@@ -721,55 +1284,79 @@ function classify(lm){
 
 
 /* =====================================================
-   STABILITY
+   GESTURE STABILISER
 ===================================================== */
 
-function stabilize(next){
+function stabilizeGesture(next){
 
-    if(next===null){
+    /*
+       No valid gesture.
+    */
 
-        candidate=null;
-        candidateFrames=0;
+    if(next === null){
 
-        return confirmed;
+        candidateGesture =
+            null;
+
+        candidateFrames =
+            0;
+
+        return confirmedGesture;
     }
 
 
-    if(next===candidate){
+    /*
+       Same candidate.
+    */
+
+    if(
+        next === candidateGesture
+    ){
 
         candidateFrames++;
 
     }else{
 
-        candidate=next;
-        candidateFrames=1;
+        candidateGesture =
+            next;
+
+        candidateFrames =
+            1;
     }
 
 
     /*
-       Require a stronger confirmation
-       before changing gesture.
+       Need consecutive frames.
+
+       This prevents 4 ↔ 5 flicker.
     */
 
-    if(candidateFrames>=7){
+    if(
+        candidateFrames >= 6
+    ){
 
-        confirmed=next;
+        confirmedGesture =
+            next;
     }
 
 
-    return confirmed;
+    return confirmedGesture;
 }
 
 
 /* =====================================================
-   POSITION
+   SCREEN POSITION
 ===================================================== */
 
 function screenPosition(p){
 
-    return{
-        x:(1-p.x)*W,
-        y:p.y*H
+    return {
+
+        x:
+            (1-p.x)*W,
+
+        y:
+            p.y*H
     };
 }
 
@@ -778,53 +1365,87 @@ function screenPosition(p){
    PLANT
 ===================================================== */
 
-function plant(type,p){
+function plantFlower(
+    type,
+    position
+){
 
-    const now=performance.now();
+    const now =
+        performance.now();
 
-    if(now-lastPlant<850)return;
 
-    lastPlant=now;
+    /*
+       Prevent excessive spawning.
+    */
+
+    if(
+        now-lastPlantTime < 900
+    ){
+
+        return;
+    }
+
+
+    lastPlantTime =
+        now;
+
 
     plants.push({
 
-        x:p.x,
-        y:p.y,
+        x:
+            position.x,
+
+        y:
+            position.y,
 
         type:type,
 
         scale:
             .72+
-            Math.random()*.38,
+            Math.random()*.35,
 
         rotation:
-            (Math.random()-.5)*.25,
+            (Math.random()-.5)*.28,
 
         age:0
     });
 
 
-    if(plants.length>32){
+    if(
+        plants.length > 36
+    ){
+
         plants.shift();
     }
 
 
-    for(let i=0;i<25;i++){
+    /*
+       Soft particles.
+    */
+
+    for(
+        let i=0;
+        i<24;
+        i++
+    ){
 
         particles.push({
 
-            x:p.x,
-            y:p.y,
+            x:
+                position.x,
+
+            y:
+                position.y,
 
             vx:
-                (Math.random()-.5)*1.7,
+                (Math.random()-.5)*1.5,
 
             vy:
-                (Math.random()-.9)*1.6,
+                (Math.random()-.9)*1.5,
 
             size:
                 .5+
-                Math.random()*1.8,
+                Math.random()*1.7,
 
             life:1
         });
@@ -833,38 +1454,65 @@ function plant(type,p){
 
 
 /* =====================================================
-   FLOWER DRAWING
+   FLOWER HELPERS
 ===================================================== */
 
-function stem(length=110){
+function stem(length){
 
     ctx.beginPath();
 
-    ctx.moveTo(0,0);
+    ctx.moveTo(
+        0,
+        0
+    );
 
     ctx.bezierCurveTo(
-        9,length*.3,
-        -8,length*.7,
-        0,length
+
+        8,
+        length*.30,
+
+        -8,
+        length*.70,
+
+        0,
+        length
     );
 
     ctx.stroke();
 }
 
 
-function petal(x,y,rx,ry,r){
+function petal(
+    x,
+    y,
+    rx,
+    ry,
+    rotation
+){
 
     ctx.save();
 
-    ctx.translate(x,y);
-    ctx.rotate(r);
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(
+        rotation
+    );
 
     ctx.beginPath();
 
     ctx.ellipse(
-        0,0,
-        rx,ry,
-        0,0,
+
+        0,
+        0,
+
+        rx,
+        ry,
+
+        0,
+        0,
         Math.PI*2
     );
 
@@ -874,191 +1522,317 @@ function petal(x,y,rx,ry,r){
 }
 
 
-function drawRose(x,y,s,r){
+/* =====================================================
+   ROSE
+===================================================== */
+
+function drawRose(
+    x,y,s,r
+){
 
     ctx.save();
 
     ctx.translate(x,y);
+
     ctx.rotate(r);
+
     ctx.scale(s,s);
 
-    ctx.strokeStyle=
+
+    ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
+
     stem(115);
 
-    ctx.shadowBlur=15;
-    ctx.shadowColor=
-        "rgba(255,155,200,.45)";
 
-    ctx.strokeStyle=
-        "rgba(255,170,205,.9)";
+    ctx.shadowBlur=17;
 
-    for(let layer=0;layer<3;layer++){
+    ctx.shadowColor =
+        "rgba(255,150,200,.55)";
 
-        const radius=9+layer*6;
-        const n=7+layer*2;
 
-        for(let i=0;i<n;i++){
+    ctx.strokeStyle =
+        "rgba(255,175,208,.92)";
+
+
+    for(
+        let layer=0;
+        layer<3;
+        layer++
+    ){
+
+        const radius =
+            9+
+            layer*6;
+
+        const count =
+            7+
+            layer*2;
+
+
+        for(
+            let i=0;
+            i<count;
+            i++
+        ){
 
             petal(
+
                 0,
+
                 -radius,
+
                 9-layer,
+
                 17-layer*2,
-                i*Math.PI*2/n
+
+                i*Math.PI*2/count
             );
         }
     }
 
+
     ctx.restore();
 }
 
 
-function drawTulip(x,y,s,r){
+/* =====================================================
+   TULIP
+===================================================== */
+
+function drawTulip(
+    x,y,s,r
+){
 
     ctx.save();
 
     ctx.translate(x,y);
+
     ctx.rotate(r);
+
     ctx.scale(s,s);
 
-    ctx.strokeStyle=
+
+    ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
+
     stem(112);
 
-    ctx.shadowBlur=18;
-    ctx.shadowColor=
-        "rgba(255,170,205,.5)";
 
-    ctx.strokeStyle=
-        "rgba(255,180,211,.92)";
+    ctx.shadowBlur=18;
+
+    ctx.shadowColor =
+        "rgba(255,170,205,.52)";
+
+
+    ctx.strokeStyle =
+        "rgba(255,185,215,.94)";
+
 
     ctx.beginPath();
 
-    ctx.moveTo(-28,-5);
-
-    ctx.bezierCurveTo(
-        -30,-34,
-        -17,-46,
-        -7,-25
+    ctx.moveTo(
+        -28,
+        -5
     );
 
     ctx.bezierCurveTo(
-        -2,-49,
-        5,-51,
-        13,-26
+        -30,
+        -34,
+        -17,
+        -46,
+        -7,
+        -25
     );
 
     ctx.bezierCurveTo(
-        23,-46,
-        31,-31,
-        28,-5
+        -2,
+        -49,
+        5,
+        -51,
+        13,
+        -26
     );
 
     ctx.bezierCurveTo(
-        20,18,
-        -20,18,
-        -28,-5
+        23,
+        -46,
+        31,
+        -31,
+        28,
+        -5
+    );
+
+    ctx.bezierCurveTo(
+        20,
+        18,
+        -20,
+        18,
+        -28,
+        -5
     );
 
     ctx.stroke();
 
+
     ctx.restore();
 }
 
 
-function drawSunflower(x,y,s,r){
+/* =====================================================
+   SUNFLOWER
+===================================================== */
+
+function drawSunflower(
+    x,y,s,r
+){
 
     ctx.save();
 
     ctx.translate(x,y);
+
     ctx.rotate(r);
+
     ctx.scale(s,s);
 
-    ctx.strokeStyle=
+
+    ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
+
     stem(112);
 
-    ctx.shadowBlur=16;
-    ctx.shadowColor=
-        "rgba(255,220,120,.45)";
 
-    ctx.strokeStyle=
+    ctx.shadowBlur=17;
+
+    ctx.shadowColor =
+        "rgba(255,220,120,.52)";
+
+
+    ctx.strokeStyle =
         "rgba(255,218,128,.95)";
 
-    for(let i=0;i<20;i++){
+
+    const petals=20;
+
+
+    for(
+        let i=0;
+        i<petals;
+        i++
+    ){
 
         ctx.save();
 
-        ctx.rotate(i*Math.PI*2/20);
+        ctx.rotate(
+            i*Math.PI*2/petals
+        );
 
         petal(
-            0,-25,
-            7,23,0
+            0,
+            -25,
+            7,
+            23,
+            0
         );
 
         ctx.restore();
     }
 
+
     ctx.shadowBlur=10;
 
-    ctx.fillStyle=
+    ctx.fillStyle =
         "rgba(222,176,92,.95)";
+
 
     ctx.beginPath();
 
     ctx.arc(
-        0,0,8,
-        0,Math.PI*2
+        0,
+        0,
+        8,
+        0,
+        Math.PI*2
     );
 
     ctx.fill();
+
 
     ctx.restore();
 }
 
 
-function drawPeony(x,y,s,r){
+/* =====================================================
+   PEONY
+===================================================== */
+
+function drawPeony(
+    x,y,s,r
+){
 
     ctx.save();
 
     ctx.translate(x,y);
+
     ctx.rotate(r);
+
     ctx.scale(s,s);
 
-    ctx.strokeStyle=
+
+    ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
+
     stem(112);
 
-    ctx.shadowBlur=22;
-    ctx.shadowColor=
-        "rgba(232,177,230,.55)";
 
-    ctx.strokeStyle=
-        "rgba(239,192,230,.92)";
+    ctx.shadowBlur=24;
 
-    for(let ring=0;ring<4;ring++){
+    ctx.shadowColor =
+        "rgba(232,177,230,.60)";
 
-        const n=8+ring*2;
-        const radius=8+ring*5;
 
-        for(let i=0;i<n;i++){
+    ctx.strokeStyle =
+        "rgba(239,192,230,.94)";
+
+
+    for(
+        let ring=0;
+        ring<4;
+        ring++
+    ){
+
+        const count =
+            8+
+            ring*2;
+
+        const radius =
+            8+
+            ring*5;
+
+
+        for(
+            let i=0;
+            i<count;
+            i++
+        ){
 
             ctx.save();
 
-            ctx.rotate(i*Math.PI*2/n);
+            ctx.rotate(
+                i*Math.PI*2/count
+            );
 
             petal(
                 0,
@@ -1072,137 +1846,241 @@ function drawPeony(x,y,s,r){
         }
     }
 
-    ctx.fillStyle=
-        "rgba(255,220,243,.8)";
+
+    ctx.fillStyle =
+        "rgba(255,220,243,.82)";
+
 
     ctx.beginPath();
 
     ctx.arc(
-        0,0,4,
-        0,Math.PI*2
+        0,
+        0,
+        4,
+        0,
+        Math.PI*2
     );
 
     ctx.fill();
 
-    ctx.restore();
-}
-
-
-function drawWild(x,y,s,r){
-
-    ctx.save();
-
-    ctx.translate(x,y);
-    ctx.rotate(r);
-    ctx.scale(s,s);
-
-    const colors=[
-        "rgba(255,183,215,.92)",
-        "rgba(199,185,255,.92)",
-        "rgba(255,222,153,.92)",
-        "rgba(183,232,201,.92)",
-        "rgba(240,198,255,.92)"
-    ];
-
-    for(let i=0;i<5;i++){
-
-        const dx=(i-2)*14;
-
-        ctx.strokeStyle=
-            "rgba(126,181,141,.65)";
-
-        ctx.beginPath();
-
-        ctx.moveTo(0,0);
-
-        ctx.quadraticCurveTo(
-            dx*.3,
-            50,
-            dx,
-            110
-        );
-
-        ctx.stroke();
-
-        ctx.shadowBlur=13;
-        ctx.shadowColor=colors[i];
-
-        ctx.strokeStyle=colors[i];
-
-        for(let p=0;p<6;p++){
-
-            ctx.save();
-
-            ctx.translate(dx,-25);
-
-            ctx.rotate(p*Math.PI*2/6);
-
-            petal(
-                0,-8,
-                4,10,0
-            );
-
-            ctx.restore();
-        }
-    }
 
     ctx.restore();
 }
 
 
 /* =====================================================
-   ANIMATION
+   WILDFLOWER
 ===================================================== */
 
-function animate(){
+function drawWildflower(
+    x,y,s,r
+){
+
+    ctx.save();
+
+    ctx.translate(x,y);
+
+    ctx.rotate(r);
+
+    ctx.scale(s,s);
+
+
+    const colors=[
+
+        "rgba(255,183,215,.94)",
+
+        "rgba(199,185,255,.94)",
+
+        "rgba(255,222,153,.94)",
+
+        "rgba(183,232,201,.94)",
+
+        "rgba(240,198,255,.94)"
+    ];
+
+
+    for(
+        let i=0;
+        i<5;
+        i++
+    ){
+
+        const dx =
+            (i-2)*14;
+
+
+        ctx.strokeStyle =
+            "rgba(126,181,141,.68)";
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            0
+        );
+
+        ctx.quadraticCurveTo(
+
+            dx*.3,
+            50,
+
+            dx,
+            110
+        );
+
+        ctx.stroke();
+
+
+        ctx.shadowBlur=14;
+
+        ctx.shadowColor =
+            colors[i];
+
+        ctx.strokeStyle =
+            colors[i];
+
+
+        for(
+            let p=0;
+            p<6;
+            p++
+        ){
+
+            ctx.save();
+
+            ctx.translate(
+                dx,
+                -25
+            );
+
+            ctx.rotate(
+                p*Math.PI*2/6
+            );
+
+            petal(
+                0,
+                -8,
+                4,
+                10,
+                0
+            );
+
+            ctx.restore();
+        }
+    }
+
+
+    ctx.restore();
+}
+
+
+/* =====================================================
+   VISUAL LOOP
+===================================================== */
+
+function render(){
 
     ctx.clearRect(
-        0,0,W,H
+        0,
+        0,
+        W,
+        H
     );
 
 
-    for(const p of plants){
+    /*
+       Flowers.
+    */
 
-        p.age+=.026;
+    for(
+        const p of plants
+    ){
 
-        const growth=
-            Math.min(p.age,1);
-
-        const s=
-            p.scale*growth;
+        p.age += .026;
 
 
-        if(p.type==="rose")
+        const growth =
+            Math.min(
+                p.age,
+                1
+            );
+
+
+        const scale =
+            p.scale *
+            growth;
+
+
+        if(
+            p.type === "rose"
+        ){
+
             drawRose(
-                p.x,p.y,
-                s,p.rotation
+                p.x,
+                p.y,
+                scale,
+                p.rotation
             );
+        }
 
-        if(p.type==="tulip")
+
+        if(
+            p.type === "tulip"
+        ){
+
             drawTulip(
-                p.x,p.y,
-                s,p.rotation
+                p.x,
+                p.y,
+                scale,
+                p.rotation
             );
+        }
 
-        if(p.type==="sunflower")
+
+        if(
+            p.type === "sunflower"
+        ){
+
             drawSunflower(
-                p.x,p.y,
-                s,p.rotation
+                p.x,
+                p.y,
+                scale,
+                p.rotation
             );
+        }
 
-        if(p.type==="peony")
+
+        if(
+            p.type === "peony"
+        ){
+
             drawPeony(
-                p.x,p.y,
-                s,p.rotation
+                p.x,
+                p.y,
+                scale,
+                p.rotation
             );
+        }
 
-        if(p.type==="wild")
-            drawWild(
-                p.x,p.y,
-                s,p.rotation
+
+        if(
+            p.type === "wild"
+        ){
+
+            drawWildflower(
+                p.x,
+                p.y,
+                scale,
+                p.rotation
             );
+        }
     }
 
+
+    /*
+       Particles.
+    */
 
     for(
         let i=particles.length-1;
@@ -1210,18 +2088,27 @@ function animate(){
         i--
     ){
 
-        const p=particles[i];
-
-        p.x+=p.vx;
-        p.y+=p.vy;
-
-        p.vy+=.012;
-        p.life-=.014;
+        const p =
+            particles[i];
 
 
-        if(p.life<=0){
+        p.x += p.vx;
 
-            particles.splice(i,1);
+        p.y += p.vy;
+
+        p.vy += .012;
+
+        p.life -= .014;
+
+
+        if(
+            p.life <= 0
+        ){
+
+            particles.splice(
+                i,
+                1
+            );
 
             continue;
         }
@@ -1229,20 +2116,26 @@ function animate(){
 
         ctx.save();
 
-        ctx.globalAlpha=
+        ctx.globalAlpha =
             p.life*.7;
 
-        ctx.fillStyle="white";
+        ctx.fillStyle =
+            "#fff";
 
         ctx.shadowBlur=14;
-        ctx.shadowColor="white";
+
+        ctx.shadowColor =
+            "#fff";
+
 
         ctx.beginPath();
 
         ctx.arc(
-            p.x,p.y,
+            p.x,
+            p.y,
             p.size,
-            0,Math.PI*2
+            0,
+            Math.PI*2
         );
 
         ctx.fill();
@@ -1252,153 +2145,327 @@ function animate(){
 
 
     requestAnimationFrame(
-        animate
+        render
     );
 }
 
-animate();
+
+render();
 
 
 /* =====================================================
-   DETECTION LOOP
+   HAND PROCESSING
 ===================================================== */
 
-async function detectHands(){
+function processHandFrame(){
 
     if(
-        !handLandmarker ||
-        video.readyState<2
+        !trackerReady ||
+        !cameraReady ||
+        !handLandmarker
     ){
-
-        requestAnimationFrame(
-            detectHands
-        );
 
         return;
     }
 
 
     if(
-        video.currentTime!==lastVideoTime
+        video.readyState < 2
     ){
 
-        lastVideoTime=
-            video.currentTime;
+        return;
+    }
 
 
-        try{
+    /*
+       Never allow concurrent MediaPipe
+       inference.
+    */
 
-            const result=
-                handLandmarker.detectForVideo(
-                    video,
-                    performance.now()
+    if(
+        detectionBusy
+    ){
+
+        return;
+    }
+
+
+    detectionBusy=true;
+
+
+    try{
+
+        const result =
+            handLandmarker.detectForVideo(
+                video,
+                performance.now()
+            );
+
+
+        /*
+           HAND FOUND
+        */
+
+        if(
+            result &&
+            result.landmarks &&
+            result.landmarks.length
+        ){
+
+            const lm =
+                result.landmarks[0];
+
+
+            const rawGesture =
+                classifyGesture(lm);
+
+
+            const stableGesture =
+                stabilizeGesture(
+                    rawGesture
                 );
 
 
             if(
-                result.landmarks &&
-                result.landmarks.length
+                stableGesture
             ){
 
-                const lm=
-                    result.landmarks[0];
+                const data =
+                    FLOWERS[
+                        stableGesture
+                    ];
 
 
-                const raw=
-                    classify(lm);
+                flower.textContent =
+                    data.name;
 
 
-                const stable=
-                    stabilize(raw);
+                meaning.textContent =
+                    data.meaning;
 
 
-                if(stable){
-
-                    const data=
-                        FLOWERS[stable];
-
-
-                    flower.textContent=
-                        data.name;
-
-                    meaning.textContent=
-                        data.meaning;
-
-                    info.classList.add(
-                        "show"
-                    );
+                info.classList.add(
+                    "show"
+                );
 
 
-                    gesture.textContent=
-                        stable+
-                        " FINGER"+
-                        (stable===1?"":"S")+
-                        " · "+
-                        data.name;
+                gesture.textContent =
+
+                    stableGesture +
+
+                    " FINGER" +
+
+                    (
+                        stableGesture === 1
+                        ? ""
+                        : "S"
+                    ) +
+
+                    " · " +
+
+                    data.name;
 
 
-                    /*
-                       Use index fingertip
-                       as the planting point.
-                    */
+                /*
+                   Index fingertip is used
+                   as the garden planting
+                   position.
 
-                    plant(
-                        data.type,
-                        screenPosition(
-                            lm[8]
-                        )
-                    );
+                   For open palm, use the
+                   palm center instead.
+                */
+
+                let point;
+
+
+                if(
+                    stableGesture === 5
+                ){
+
+                    point = {
+
+                        x:
+                            (
+                                lm[0].x+
+                                lm[9].x
+                            )/2,
+
+                        y:
+                            (
+                                lm[0].y+
+                                lm[9].y
+                            )/2
+                    };
 
                 }else{
 
-                    info.classList.remove(
-                        "show"
-                    );
-
-                    gesture.textContent=
-                        "SHOW YOUR HAND";
+                    point =
+                        lm[8];
                 }
 
-            }else{
 
-                candidate=null;
-                candidateFrames=0;
-                confirmed=null;
+                plantFlower(
+
+                    data.type,
+
+                    screenPosition(
+                        point
+                    )
+                );
+
+
+            }else{
 
                 info.classList.remove(
                     "show"
                 );
 
-                gesture.textContent=
-                    "SHOW YOUR HAND";
+
+                gesture.textContent =
+                    "HOLD GESTURE";
             }
 
-        }catch(err){
 
-            console.error(
-                "HAND TRACKING ERROR:",
-                err
+        }else{
+
+            /*
+               No hand.
+
+               Reset classifier.
+            */
+
+            candidateGesture =
+                null;
+
+            candidateFrames =
+                0;
+
+            confirmedGesture =
+                null;
+
+
+            info.classList.remove(
+                "show"
             );
+
+
+            gesture.textContent =
+                "SHOW YOUR HAND";
         }
+
+
+    }catch(error){
+
+        console.warn(
+            "Hand tracking:",
+            error
+        );
+
+    }finally{
+
+        detectionBusy=false;
+    }
+}
+
+
+/* =====================================================
+   VIDEO FRAME LOOP
+===================================================== */
+
+function startDetectionLoop(){
+
+    if(
+        !video.requestVideoFrameCallback
+    ){
+
+        /*
+           Fallback.
+        */
+
+        let lastRun=0;
+
+
+        function fallback(now){
+
+            if(
+                now-lastRun >= 33
+            ){
+
+                lastRun=now;
+
+                processHandFrame();
+            }
+
+
+            if(running){
+
+                requestAnimationFrame(
+                    fallback
+                );
+            }
+        }
+
+
+        requestAnimationFrame(
+            fallback
+        );
+
+        return;
     }
 
 
-    requestAnimationFrame(
-        detectHands
+    /*
+       Preferred modern path.
+
+       The callback fires when a
+       genuinely new video frame
+       is available.
+    */
+
+    function onVideoFrame(
+        now,
+        metadata
+    ){
+
+        if(
+            !running
+        ){
+
+            return;
+        }
+
+
+        processHandFrame();
+
+
+        video.requestVideoFrameCallback(
+            onVideoFrame
+        );
+    }
+
+
+    video.requestVideoFrameCallback(
+        onVideoFrame
     );
 }
 
 
 /* =====================================================
-   START
+   START APP
 ===================================================== */
 
 enter.addEventListener(
     "click",
     async()=>{
 
+        if(running)return;
+
+
         enter.disabled=true;
-        enter.textContent="STARTING";
+
+        enter.textContent =
+            "STARTING";
+
 
         loading.classList.add(
             "show"
@@ -1407,54 +2474,105 @@ enter.addEventListener(
 
         try{
 
-            status.textContent=
+            status.textContent =
                 "CAMERA";
 
-            await openCamera();
+
+            await startCamera();
 
 
-            status.textContent=
+            status.textContent =
                 "TRACKER";
 
-            await createTracker();
+
+            await startTracker();
+
+
+            /*
+               Everything is ready.
+            */
+
+            running=true;
+
+
+            status.textContent =
+                "LIVE";
 
 
             loading.classList.remove(
                 "show"
             );
+
 
             intro.classList.add(
                 "hide"
             );
 
-            status.textContent=
-                "LIVE";
+
+            startDetectionLoop();
 
 
-            detectHands();
-
-        }catch(err){
+        }catch(error){
 
             console.error(
                 "HAND GARDEN ERROR:",
-                err
+                error
             );
+
 
             loading.classList.remove(
                 "show"
             );
 
+
             errorBox.classList.add(
                 "show"
             );
 
-            status.textContent=
+
+            status.textContent =
                 "ERROR";
+
 
             enter.disabled=false;
 
-            enter.textContent=
+
+            enter.textContent =
                 "RETRY";
+        }
+    }
+);
+
+
+/* =====================================================
+   PAGE VISIBILITY
+===================================================== */
+
+document.addEventListener(
+    "visibilitychange",
+    ()=>{
+
+        /*
+           When tab is hidden, we don't
+           need to force inference.
+
+           When visible again, the
+           video-frame callback resumes.
+        */
+
+        if(
+            document.hidden
+        ){
+
+            gesture.textContent =
+                "PAUSED";
+
+        }else if(
+            running
+        ){
+
+            gesture.textContent =
+                "SHOW YOUR HAND";
         }
     }
 );
