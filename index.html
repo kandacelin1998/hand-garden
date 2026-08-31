@@ -3,16 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Hand Garden 🌸</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 40px;
+        }
+
+        #status {
+            color: #aaa;
+        }
+
+        video {
+            width: 90%;
+            max-width: 600px;
+            margin-top: 20px;
+            border-radius: 20px;
+            transform: scaleX(-1);
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>Hand Garden 🌸</h1>
+    <h1>🌸 Hand Garden</h1>
 
-    <p id="status">Camera loading...</p>
+    <p id="status">Opening camera...</p>
 
     <video id="video" autoplay playsinline></video>
+
+    <script>
+        const video = document.getElementById("video");
+        const status = document.getElementById("status");
+
+        navigator.mediaDevices.getUserMedia({
+            video: true
+        })
+        .then(function(stream) {
+            video.srcObject = stream;
+            status.textContent = "Camera is on ✨";
+        })
+        .catch(function(error) {
+            status.textContent = "Camera access denied 😭";
+            console.error(error);
+        });
+    </script>
 
 </body>
 </html>
