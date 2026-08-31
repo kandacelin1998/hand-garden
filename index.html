@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,9 +25,9 @@
             font-size: 18px;
         }
 
-        #count {
-            font-size: 32px;
-            margin: 15px;
+        #result {
+            font-size: 30px;
+            margin: 20px;
         }
 
         video {
@@ -42,62 +43,53 @@
 
     <h1>🌸 Hand Garden</h1>
 
-    <p id="status">Starting camera...</p>
+    <p id="status">Starting...</p>
 
-    <div id="count">👋 Show me your hand</div>
+    <div id="result">👋 Show me your hand</div>
 
     <video id="video" autoplay playsinline></video>
 
 
-    <script type="module">
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/vision_bundle.js"></script>
 
-        import {
-            HandLandmarker,
-            FilesetResolver
-        } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1";
 
+    <script>
 
         const video = document.getElementById("video");
         const status = document.getElementById("status");
-        const count = document.getElementById("count");
+        const result = document.getElementById("result");
 
 
-        // 1. Start camera FIRST
-        async function startCamera() {
+        let handLandmarker;
+
+
+        async function start() {
 
             try {
 
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: true
-                });
+                // CAMERA
+                status.textContent = "Starting camera...";
+
+                const stream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: true
+                    });
 
                 video.srcObject = stream;
 
-                status.textContent = "Camera ready 📷";
 
-            } catch (error) {
-
-                status.textContent = "Camera error: " + error.message;
-
-                console.error(error);
-            }
-        }
-
-
-        // 2. Load hand tracking
-        async function startHandTracking() {
-
-            try {
-
+                // MEDIAPIPE
                 status.textContent = "Loading hand tracking...";
 
 
-                const vision = await FilesetResolver.forVisionTasks(
-                    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm"
-                );
+                const vision =
+                    await FilesetResolver.forVisionTasks(
+                        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm"
+                    );
 
 
-                const handLandmarker =
+                handLandmarker =
                     await HandLandmarker.createFromModelPath(
                         vision,
                         "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
@@ -107,50 +99,56 @@
                 status.textContent = "Hand tracking ready ✨";
 
 
-                function detect() {
-
-                    if (video.readyState >= 2) {
-
-                        const results =
-                            handLandmarker.detectForVideo(
-                                video,
-                                performance.now()
-                            );
-
-
-                        if (results.landmarks.length > 0) {
-
-                            count.textContent = "✋ Hand detected!";
-
-                        } else {
-
-                            count.textContent =
-                                "👋 Show me your hand";
-                        }
-                    }
-
-                    requestAnimationFrame(detect);
-                }
-
-
                 detect();
 
 
             } catch (error) {
 
-                status.textContent =
-                    "Hand tracking error — check Console";
-
                 console.error(error);
+
+                status.textContent =
+                    "ERROR: " + error.message;
+
             }
+
         }
 
 
-        // Start both
-        startCamera();
-        startHandTracking();
+        function detect() {
+
+            if (video.readyState >= 2) {
+
+                const hands =
+                    handLandmarker.detectForVideo(
+                        video,
+                        performance.now()
+                    );
+
+
+                if (hands.landmarks.length > 0) {
+
+                    result.textContent =
+                        "✋ Hand detected!";
+
+                } else {
+
+                    result.textContent =
+                        "👋 Show me your hand";
+
+                }
+
+            }
+
+
+            requestAnimationFrame(detect);
+
+        }
+
+
+        start();
 
     </script>
 
 </body>
+
 </html>
