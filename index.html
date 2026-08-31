@@ -28,10 +28,15 @@ body {
     background: #000;
 }
 
-/* CAMERA */
+
+/* =====================================================
+   CAMERA
+===================================================== */
 
 #video {
+
     position: fixed;
+
     inset: 0;
 
     width: 100%;
@@ -43,12 +48,22 @@ body {
 
     opacity: 0;
 
-    transition: opacity .8s ease;
+    transition:
+        opacity 1s ease;
+
+    /*
+       BEAUTY CAMERA
+
+       brighter
+       softer
+       slightly luminous
+    */
 
     filter:
-        brightness(.38)
-        contrast(1.18)
-        saturate(.45);
+        brightness(1.12)
+        contrast(.92)
+        saturate(1.08)
+        blur(.35px);
 
     z-index: 1;
 }
@@ -57,24 +72,18 @@ body {
     opacity: 1;
 }
 
-/* CANVAS */
 
-#canvas {
+/*
+   SOFT LIGHT OVERLAY
+
+   Gives the camera a subtle
+   Japanese photo-booth glow.
+*/
+
+#beautyGlow {
+
     position: fixed;
-    inset: 0;
 
-    width: 100%;
-    height: 100%;
-
-    z-index: 3;
-
-    pointer-events: none;
-}
-
-/* DARK OVERLAY */
-
-#shade {
-    position: fixed;
     inset: 0;
 
     z-index: 2;
@@ -82,25 +91,81 @@ body {
     pointer-events: none;
 
     background:
+
         radial-gradient(
             ellipse at center,
-            rgba(0,0,0,0) 15%,
-            rgba(0,0,0,.45) 100%
+            rgba(255,255,255,.10) 0%,
+            rgba(255,255,255,.035) 42%,
+            rgba(255,255,255,0) 72%
         );
+
+    mix-blend-mode: screen;
+
 }
 
-/* TOP UI */
+
+/* =====================================================
+   FLOWER CANVAS
+===================================================== */
+
+#canvas {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 4;
+
+    pointer-events: none;
+
+}
+
+
+/* =====================================================
+   UI DARK VIGNETTE
+===================================================== */
+
+#shade {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 5;
+
+    pointer-events: none;
+
+    background:
+
+        radial-gradient(
+            ellipse at center,
+            rgba(0,0,0,0) 35%,
+            rgba(0,0,0,.28) 100%
+        );
+
+}
+
+
+/* =====================================================
+   TOP
+===================================================== */
 
 #top {
+
     position: fixed;
 
     top: 25px;
+
     left: 28px;
     right: 28px;
 
-    z-index: 10;
+    z-index: 20;
 
     display: flex;
+
     justify-content: space-between;
 
     font-family:
@@ -112,50 +177,70 @@ body {
 
     letter-spacing: .25em;
 
-    color: rgba(255,255,255,.55);
+    color:
+        rgba(255,255,255,.62);
+
 }
 
 .dim {
-    color: rgba(255,255,255,.2);
+    color:
+        rgba(255,255,255,.22);
 }
 
-/* BOTTOM INFO */
+
+/* =====================================================
+   FLOWER INFO
+===================================================== */
 
 #info {
+
     position: fixed;
 
     left: 28px;
+
     bottom: 27px;
 
-    z-index: 10;
+    z-index: 20;
 
     opacity: 0;
 
-    transform: translateY(8px);
+    transform:
+        translateY(8px);
 
     transition:
-        opacity .5s ease,
-        transform .5s ease;
+        opacity .6s ease,
+        transform .6s ease;
+
+    pointer-events: none;
+
 }
 
 #info.show {
+
     opacity: 1;
-    transform: translateY(0);
+
+    transform:
+        translateY(0);
+
 }
 
 #flower {
+
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-    font-size: 25px;
+    font-size: 27px;
 
-    letter-spacing: -.02em;
+    letter-spacing:
+        -.025em;
+
 }
 
 #meaning {
-    margin-top: 5px;
+
+    margin-top: 6px;
 
     font-family:
         "SFMono-Regular",
@@ -164,18 +249,27 @@ body {
 
     font-size: 8px;
 
-    letter-spacing: .22em;
+    letter-spacing: .23em;
 
-    color: rgba(255,255,255,.35);
+    color:
+        rgba(255,255,255,.42);
+
 }
 
+
+/* =====================================================
+   GESTURE
+===================================================== */
+
 #gesture {
+
     position: fixed;
 
     right: 28px;
+
     bottom: 28px;
 
-    z-index: 10;
+    z-index: 20;
 
     font-family:
         "SFMono-Regular",
@@ -186,34 +280,49 @@ body {
 
     letter-spacing: .2em;
 
-    color: rgba(255,255,255,.28);
+    color:
+        rgba(255,255,255,.32);
+
 }
 
-/* INTRO */
+
+/* =====================================================
+   INTRO
+===================================================== */
 
 #intro {
+
     position: fixed;
+
     inset: 0;
 
     z-index: 50;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     flex-direction: column;
 
     background: #000;
 
     transition:
         opacity .8s ease;
+
 }
 
 #intro.hide {
+
     opacity: 0;
+
     pointer-events: none;
+
 }
 
 #title {
+
     margin: 0;
 
     font-family:
@@ -228,10 +337,13 @@ body {
 
     line-height: .85;
 
-    letter-spacing: -.055em;
+    letter-spacing:
+        -.055em;
+
 }
 
 #subtitle {
+
     margin-top: 20px;
 
     font-family:
@@ -243,21 +355,28 @@ body {
 
     letter-spacing: .35em;
 
-    color: rgba(255,255,255,.3);
+    color:
+        rgba(255,255,255,.3);
 
     text-transform: uppercase;
+
 }
 
 #enter {
+
     margin-top: 48px;
 
     padding: 13px 30px;
 
-    border: 1px solid rgba(255,255,255,.3);
+    border:
+        1px solid
+        rgba(255,255,255,.3);
 
-    background: transparent;
+    background:
+        transparent;
 
-    color: white;
+    color:
+        white;
 
     font-family:
         "SFMono-Regular",
@@ -274,22 +393,34 @@ body {
         background .25s ease,
         color .25s ease,
         border .25s ease;
+
 }
 
 #enter:hover {
+
     background: white;
+
     color: black;
+
     border-color: white;
+
 }
 
 #enter:disabled {
+
     opacity: .5;
+
     cursor: wait;
+
 }
 
-/* LOADING */
+
+/* =====================================================
+   LOADING
+===================================================== */
 
 #loading {
+
     position: fixed;
 
     left: 50%;
@@ -311,16 +442,22 @@ body {
 
     letter-spacing: .2em;
 
-    color: rgba(255,255,255,.55);
+    color:
+        rgba(255,255,255,.55);
+
 }
 
 #loading.show {
     display: block;
 }
 
-/* ERROR */
+
+/* =====================================================
+   ERROR
+===================================================== */
 
 #error {
+
     position: fixed;
 
     left: 50%;
@@ -348,7 +485,9 @@ body {
 
     line-height: 1.8;
 
-    color: rgba(255,255,255,.45);
+    color:
+        rgba(255,255,255,.45);
+
 }
 
 #error.show {
@@ -356,6 +495,7 @@ body {
 }
 
 #error strong {
+
     display: block;
 
     margin-bottom: 12px;
@@ -363,24 +503,32 @@ body {
     color: white;
 
     letter-spacing: .2em;
+
 }
 
-@media(max-width:600px) {
+
+@media(max-width:600px){
 
     #top {
+
         left: 18px;
         right: 18px;
         top: 18px;
+
     }
 
     #info {
+
         left: 18px;
         bottom: 20px;
+
     }
 
     #gesture {
+
         right: 18px;
         bottom: 20px;
+
     }
 
 }
@@ -388,7 +536,11 @@ body {
 </style>
 </head>
 
+
 <body>
+
+
+<!-- CAMERA -->
 
 <video
     id="video"
@@ -397,10 +549,21 @@ body {
     playsinline>
 </video>
 
+
+<!-- BEAUTY LIGHT -->
+
+<div id="beautyGlow"></div>
+
+
+<!-- FLOWERS -->
+
 <canvas id="canvas"></canvas>
+
 
 <div id="shade"></div>
 
+
+<!-- TOP -->
 
 <div id="top">
 
@@ -414,6 +577,8 @@ body {
 
 </div>
 
+
+<!-- FLOWER INFO -->
 
 <div id="info">
 
@@ -432,6 +597,8 @@ body {
     SHOW YOUR HAND
 </div>
 
+
+<!-- INTRO -->
 
 <div id="intro">
 
@@ -457,17 +624,14 @@ body {
 
 <div id="error">
 
-    <strong>CAMERA UNAVAILABLE</strong>
+    <strong>
+        CAMERA UNAVAILABLE
+    </strong>
 
     Please allow camera access and reload the page.
 
 </div>
 
-
-<!-- ======================================================
-     MEDIA PIPE
-     Official CDN format
-====================================================== -->
 
 <script type="module">
 
@@ -479,9 +643,9 @@ from
 "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.mjs";
 
 
-/* ======================================================
+/* =====================================================
    ELEMENTS
-====================================================== */
+===================================================== */
 
 const video =
     document.getElementById("video");
@@ -520,17 +684,25 @@ const gesture =
     document.getElementById("gesture");
 
 
-/* ======================================================
+/* =====================================================
    CANVAS
-====================================================== */
+===================================================== */
 
-let W = window.innerWidth;
-let H = window.innerHeight;
+let W =
+    window.innerWidth;
 
-function resize() {
+let H =
+    window.innerHeight;
 
-    W = window.innerWidth;
-    H = window.innerHeight;
+
+function resize(){
+
+    W =
+        window.innerWidth;
+
+    H =
+        window.innerHeight;
+
 
     const dpr =
         Math.min(
@@ -538,17 +710,20 @@ function resize() {
             2
         );
 
+
     canvas.width =
         W * dpr;
 
     canvas.height =
         H * dpr;
 
+
     canvas.style.width =
         W + "px";
 
     canvas.style.height =
         H + "px";
+
 
     ctx.setTransform(
         dpr,
@@ -558,9 +733,12 @@ function resize() {
         0,
         0
     );
+
 }
 
+
 resize();
+
 
 window.addEventListener(
     "resize",
@@ -568,66 +746,121 @@ window.addEventListener(
 );
 
 
-/* ======================================================
+/* =====================================================
    STATE
-====================================================== */
+===================================================== */
 
-let handLandmarker = null;
+let handLandmarker =
+    null;
 
-let lastVideoTime = -1;
+let lastVideoTime =
+    -1;
 
-let lastGesture = null;
+let currentGesture =
+    null;
 
-let lastPlant = 0;
+let stableGesture =
+    null;
+
+let gestureFrames =
+    0;
+
+let lastPlant =
+    0;
 
 const plants = [];
 
 const particles = [];
 
 
-/* ======================================================
-   FLOWER MEANINGS
-====================================================== */
+/* =====================================================
+   FLOWERS
+===================================================== */
 
 const FLOWERS = {
 
     1: {
-        name: "Rose",
-        meaning: "LOVE · COURAGE",
-        type: "rose"
+
+        name:
+            "Rose",
+
+        meaning:
+            "LOVE · COURAGE",
+
+        type:
+            "rose"
+
     },
+
 
     2: {
-        name: "Tulip",
-        meaning: "NEW BEGINNINGS",
-        type: "tulip"
+
+        name:
+            "Tulip",
+
+        meaning:
+            "NEW BEGINNINGS",
+
+        type:
+            "tulip"
+
     },
+
 
     3: {
-        name: "Sunflower",
-        meaning: "JOY · POSITIVITY",
-        type: "sunflower"
+
+        name:
+            "Sunflower",
+
+        meaning:
+            "JOY · POSITIVITY",
+
+        type:
+            "sunflower"
+
     },
 
+
+    4: {
+
+        name:
+            "Peony",
+
+        meaning:
+            "PROSPERITY · BEAUTY",
+
+        type:
+            "peony"
+
+    },
+
+
     5: {
-        name: "Wildflower",
-        meaning: "FREEDOM · GRATITUDE",
-        type: "wild"
+
+        name:
+            "Wildflower",
+
+        meaning:
+            "FREEDOM · GRATITUDE",
+
+        type:
+            "wild"
+
     }
 
 };
 
 
-/* ======================================================
+/* =====================================================
    CAMERA
-====================================================== */
+===================================================== */
 
-async function openCamera() {
+async function openCamera(){
 
-    if (
+    if(
         !navigator.mediaDevices ||
         !navigator.mediaDevices.getUserMedia
-    ) {
+    ){
 
         throw new Error(
             "Camera API unavailable"
@@ -635,23 +868,33 @@ async function openCamera() {
 
     }
 
+
     const stream =
-        await navigator.mediaDevices
+        await navigator
+        .mediaDevices
         .getUserMedia({
 
             video: {
-                facingMode: "user",
+
+                facingMode:
+                    "user",
 
                 width: {
-                    ideal: 1280
+                    ideal: 1920
                 },
 
                 height: {
-                    ideal: 720
+                    ideal: 1080
+                },
+
+                frameRate: {
+                    ideal: 30
                 }
+
             },
 
-            audio: false
+            audio:
+                false
 
         });
 
@@ -680,11 +923,11 @@ async function openCamera() {
 }
 
 
-/* ======================================================
-   MEDIAPIPE
-====================================================== */
+/* =====================================================
+   TRACKER
+===================================================== */
 
-async function createTracker() {
+async function createTracker(){
 
     const vision =
         await FilesetResolver
@@ -706,6 +949,7 @@ async function createTracker() {
                 baseOptions: {
 
                     modelAssetPath:
+
                     "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
 
                     delegate:
@@ -713,20 +957,25 @@ async function createTracker() {
 
                 },
 
+
                 runningMode:
                     "VIDEO",
+
 
                 numHands:
                     1,
 
+
                 minHandDetectionConfidence:
-                    0.5,
+                    .42,
+
 
                 minHandPresenceConfidence:
-                    0.5,
+                    .42,
+
 
                 minTrackingConfidence:
-                    0.5
+                    .42
 
             }
 
@@ -735,23 +984,101 @@ async function createTracker() {
 }
 
 
-/* ======================================================
-   FINGER COUNT
-====================================================== */
+/* =====================================================
+   DISTANCE
+===================================================== */
 
-function countFingers(lm) {
+function distance(a,b){
 
-    let count = 0;
+    return Math.hypot(
+
+        a.x-b.x,
+
+        a.y-b.y
+
+    );
+
+}
+
+
+/* =====================================================
+   FINGER DETECTION
+===================================================== */
+
+/*
+   Instead of simply checking y-position,
+   this version checks the angle and distance
+   of each finger.
+
+   This is much more tolerant of rotated hands.
+*/
+
+function fingerExtended(
+    lm,
+    tip,
+    pip,
+    mcp
+){
+
+    const a =
+        distance(
+            lm[tip],
+            lm[pip]
+        );
+
+    const b =
+        distance(
+            lm[pip],
+            lm[mcp]
+        );
+
+    const c =
+        distance(
+            lm[tip],
+            lm[mcp]
+        );
+
+
+    /*
+       A straight finger has
+       tip → MCP significantly
+       longer than the individual
+       segments.
+    */
+
+    return (
+        c >
+        b * 1.18
+        &&
+        a >
+        b * .75
+    );
+
+}
+
+
+/* =====================================================
+   COUNT FINGERS
+===================================================== */
+
+function countFingers(lm){
+
+    let count =
+        0;
 
 
     /*
        INDEX
     */
 
-    if (
-        lm[8].y <
-        lm[6].y
-    ) {
+    if(
+        fingerExtended(
+            lm,
+            8,
+            6,
+            5
+        )
+    ){
 
         count++;
 
@@ -762,10 +1089,14 @@ function countFingers(lm) {
        MIDDLE
     */
 
-    if (
-        lm[12].y <
-        lm[10].y
-    ) {
+    if(
+        fingerExtended(
+            lm,
+            12,
+            10,
+            9
+        )
+    ){
 
         count++;
 
@@ -776,10 +1107,14 @@ function countFingers(lm) {
        RING
     */
 
-    if (
-        lm[16].y <
-        lm[14].y
-    ) {
+    if(
+        fingerExtended(
+            lm,
+            16,
+            14,
+            13
+        )
+    ){
 
         count++;
 
@@ -790,10 +1125,14 @@ function countFingers(lm) {
        PINKY
     */
 
-    if (
-        lm[20].y <
-        lm[18].y
-    ) {
+    if(
+        fingerExtended(
+            lm,
+            20,
+            18,
+            17
+        )
+    ){
 
         count++;
 
@@ -802,30 +1141,54 @@ function countFingers(lm) {
 
     /*
        THUMB
+
+       Use the direction from
+       thumb MCP → thumb tip
+       relative to palm.
     */
 
     const thumbTip =
         lm[4];
 
-    const thumbBase =
+    const thumbMCP =
         lm[2];
 
+    const thumbIP =
+        lm[3];
 
-    const distance =
-        Math.hypot(
 
-            thumbTip.x -
-            thumbBase.x,
-
-            thumbTip.y -
-            thumbBase.y
-
+    const thumbLength =
+        distance(
+            thumbTip,
+            thumbMCP
         );
 
 
-    if (
-        distance > 0.18
-    ) {
+    const palmWidth =
+        distance(
+            lm[5],
+            lm[17]
+        );
+
+
+    const thumbAngle =
+        Math.abs(
+            thumbTip.x -
+            thumbIP.x
+        );
+
+
+    if(
+
+        thumbLength >
+        palmWidth * .48
+
+        &&
+
+        thumbAngle >
+        .025
+
+    ){
 
         count++;
 
@@ -837,16 +1200,66 @@ function countFingers(lm) {
 }
 
 
-/* ======================================================
-   POSITION
-====================================================== */
+/* =====================================================
+   STABLE GESTURE
+===================================================== */
 
-function screenPosition(p) {
+function stabilizeGesture(
+    detected
+){
+
+    if(
+        detected ===
+        currentGesture
+    ){
+
+        gestureFrames++;
+
+    }
+    else{
+
+        currentGesture =
+            detected;
+
+        gestureFrames =
+            0;
+
+    }
+
+
+    /*
+       Require roughly 4
+       consecutive frames.
+
+       This prevents flickering
+       between 4 and 5.
+    */
+
+    if(
+        gestureFrames >= 4
+    ){
+
+        stableGesture =
+            detected;
+
+    }
+
+
+    return stableGesture;
+
+}
+
+
+/* =====================================================
+   SCREEN POSITION
+===================================================== */
+
+function screenPosition(p){
 
     return {
 
         x:
-            (1 - p.x) * W,
+            (1-p.x) * W,
 
         y:
             p.y * H
@@ -856,20 +1269,23 @@ function screenPosition(p) {
 }
 
 
-/* ======================================================
+/* =====================================================
    PLANT
-====================================================== */
+===================================================== */
 
-function plant(type, p) {
+function plant(
+    type,
+    point
+){
 
     const now =
         performance.now();
 
 
-    if (
-        now - lastPlant <
-        900
-    ) {
+    if(
+        now-lastPlant <
+        800
+    ){
 
         return;
 
@@ -882,62 +1298,74 @@ function plant(type, p) {
 
     plants.push({
 
-        x: p.x,
+        x:
+            point.x,
 
-        y: p.y,
+        y:
+            point.y,
 
-        type: type,
+        type:
+            type,
 
         scale:
-            0.65 +
-            Math.random() * 0.4,
+            .72 +
+            Math.random()*.38,
 
         rotation:
             (
-                Math.random() -
-                0.5
-            ) * 0.3,
+                Math.random()-.5
+            )*.25,
 
-        age: 0
+        age:
+            0
 
     });
 
 
-    if (
+    if(
         plants.length >
-        35
-    ) {
+        32
+    ){
 
         plants.shift();
 
     }
 
 
-    for (
-        let i = 0;
-        i < 18;
+    /*
+       Dreamy particles
+    */
+
+    for(
+        let i=0;
+        i<24;
         i++
-    ) {
+    ){
 
         particles.push({
 
-            x: p.x,
+            x:
+                point.x,
 
-            y: p.y,
+            y:
+                point.y,
 
             vx:
                 (
-                    Math.random() -
-                    0.5
-                ) * 2,
+                    Math.random()-.5
+                )*1.7,
 
             vy:
                 (
-                    Math.random() -
-                    0.7
-                ) * 2,
+                    Math.random()-.9
+                )*1.6,
 
-            life: 1
+            size:
+                .5+
+                Math.random()*1.8,
+
+            life:
+                1
 
         });
 
@@ -946,13 +1374,13 @@ function plant(type, p) {
 }
 
 
-/* ======================================================
+/* =====================================================
    STEM
-====================================================== */
+===================================================== */
 
-function drawStem(
-    length = 110
-) {
+function stem(
+    length=110
+){
 
     ctx.beginPath();
 
@@ -963,11 +1391,11 @@ function drawStem(
 
     ctx.bezierCurveTo(
 
-        7,
-        length * .3,
+        9,
+        length*.3,
 
-        -7,
-        length * .7,
+        -8,
+        length*.7,
 
         0,
         length
@@ -979,16 +1407,17 @@ function drawStem(
 }
 
 
-/* ======================================================
-   ROSE
-====================================================== */
+/* =====================================================
+   PETAL
+===================================================== */
 
-function drawRose(
+function petal(
     x,
     y,
-    scale,
+    rx,
+    ry,
     rotation
-) {
+){
 
     ctx.save();
 
@@ -1001,55 +1430,113 @@ function drawRose(
         rotation
     );
 
+    ctx.beginPath();
+
+    ctx.ellipse(
+        0,
+        0,
+        rx,
+        ry,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.stroke();
+
+    ctx.restore();
+
+}
+
+
+/* =====================================================
+   ROSE — DREAMY
+===================================================== */
+
+function drawRose(
+    x,
+    y,
+    s,
+    r
+){
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(r);
+
     ctx.scale(
-        scale,
-        scale
+        s,
+        s
     );
 
 
     ctx.strokeStyle =
-        "rgba(145,190,151,.8)";
+        "rgba(126,181,141,.75)";
 
     ctx.lineWidth =
-        1.1;
+        1;
 
-    drawStem();
+
+    stem(115);
+
+
+    /*
+       soft rose petals
+    */
+
+    ctx.shadowBlur =
+        14;
+
+    ctx.shadowColor =
+        "rgba(255,155,200,.45)";
 
 
     ctx.strokeStyle =
-        "rgba(255,166,199,.95)";
+        "rgba(255,170,205,.9)";
 
 
-    for (
-        let i = 0;
-        i < 11;
-        i++
-    ) {
+    for(
+        let layer=0;
+        layer<3;
+        layer++
+    ){
 
-        ctx.save();
+        const radius =
+            9+
+            layer*6;
 
-        ctx.rotate(
-            i *
-            Math.PI *
-            2 /
-            11
-        );
 
-        ctx.beginPath();
+        const petals =
+            7+
+            layer*2;
 
-        ctx.ellipse(
-            0,
-            -22,
-            12,
-            22,
-            0,
-            0,
-            Math.PI * 2
-        );
 
-        ctx.stroke();
+        for(
+            let i=0;
+            i<petals;
+            i++
+        ){
 
-        ctx.restore();
+            petal(
+
+                0,
+
+                -radius,
+
+                9-layer,
+
+                17-layer*2,
+
+                i*Math.PI*2/petals
+
+            );
+
+        }
 
     }
 
@@ -1059,16 +1546,16 @@ function drawRose(
 }
 
 
-/* ======================================================
+/* =====================================================
    TULIP
-====================================================== */
+===================================================== */
 
 function drawTulip(
     x,
     y,
-    scale,
-    rotation
-) {
+    s,
+    r
+){
 
     ctx.save();
 
@@ -1077,73 +1564,76 @@ function drawTulip(
         y
     );
 
-    ctx.rotate(
-        rotation
-    );
+    ctx.rotate(r);
 
     ctx.scale(
-        scale,
-        scale
+        s,
+        s
     );
 
 
     ctx.strokeStyle =
-        "rgba(145,190,151,.8)";
+        "rgba(126,181,141,.75)";
 
     ctx.lineWidth =
-        1.1;
+        1;
 
-    drawStem();
+
+    stem(112);
+
+
+    ctx.shadowBlur =
+        18;
+
+    ctx.shadowColor =
+        "rgba(255,170,205,.5)";
 
 
     ctx.strokeStyle =
-        "rgba(248,172,201,.95)";
-
-    ctx.lineWidth =
-        1.2;
+        "rgba(255,180,211,.92)";
 
 
     ctx.beginPath();
 
     ctx.moveTo(
-        -27,
-        -4
-    );
-
-    ctx.bezierCurveTo(
         -28,
-        -33,
+        -5
+    );
+
+    ctx.bezierCurveTo(
+        -30,
+        -34,
         -17,
-        -44,
-        -8,
+        -46,
+        -7,
         -25
     );
 
     ctx.bezierCurveTo(
-        0,
+        -2,
+        -49,
+        5,
         -51,
-        8,
-        -51,
-        15,
-        -25
+        13,
+        -26
     );
 
     ctx.bezierCurveTo(
-        24,
-        -43,
-        29,
-        -29,
-        27,
-        -4
+        23,
+        -46,
+        31,
+        -31,
+        28,
+        -5
     );
 
     ctx.bezierCurveTo(
+        20,
         18,
-        16,
-        -19,
-        16,
-        -27,
-        -4
+        -20,
+        18,
+        -28,
+        -5
     );
 
     ctx.stroke();
@@ -1154,16 +1644,16 @@ function drawTulip(
 }
 
 
-/* ======================================================
+/* =====================================================
    SUNFLOWER
-====================================================== */
+===================================================== */
 
 function drawSunflower(
     x,
     y,
-    scale,
-    rotation
-) {
+    s,
+    r
+){
 
     ctx.save();
 
@@ -1172,74 +1662,83 @@ function drawSunflower(
         y
     );
 
-    ctx.rotate(
-        rotation
-    );
+    ctx.rotate(r);
 
     ctx.scale(
-        scale,
-        scale
+        s,
+        s
     );
 
 
     ctx.strokeStyle =
-        "rgba(145,190,151,.8)";
+        "rgba(126,181,141,.75)";
 
     ctx.lineWidth =
-        1.1;
+        1;
 
-    drawStem();
+
+    stem(112);
+
+
+    ctx.shadowBlur =
+        16;
+
+    ctx.shadowColor =
+        "rgba(255,220,120,.45)";
 
 
     ctx.strokeStyle =
-        "rgba(248,210,117,.95)";
+        "rgba(255,218,128,.95)";
 
 
-    for (
-        let i = 0;
-        i < 18;
+    const petals =
+        20;
+
+
+    for(
+        let i=0;
+        i<petals;
         i++
-    ) {
+    ){
+
+        const a =
+            i*Math.PI*2/petals;
+
 
         ctx.save();
 
-        ctx.rotate(
-            i *
-            Math.PI *
-            2 /
-            18
-        );
+        ctx.rotate(a);
 
-        ctx.beginPath();
 
-        ctx.ellipse(
+        petal(
             0,
-            -27,
+            -25,
             7,
             23,
-            0,
-            0,
-            Math.PI * 2
+            0
         );
 
-        ctx.stroke();
 
         ctx.restore();
 
     }
 
 
+    ctx.shadowBlur =
+        10;
+
     ctx.fillStyle =
-        "rgba(220,171,80,.95)";
+        "rgba(222,176,92,.95)";
+
 
     ctx.beginPath();
 
     ctx.arc(
         0,
         0,
-        7,
+        8,
         0,
-        Math.PI * 2
+        Math.PI*2
     );
 
     ctx.fill();
@@ -1250,16 +1749,16 @@ function drawSunflower(
 }
 
 
-/* ======================================================
-   WILDFLOWERS
-====================================================== */
+/* =====================================================
+   PEONY
+===================================================== */
 
-function drawWild(
+function drawPeony(
     x,
     y,
-    scale,
-    rotation
-) {
+    s,
+    r
+){
 
     ctx.save();
 
@@ -1268,46 +1767,160 @@ function drawWild(
         y
     );
 
-    ctx.rotate(
-        rotation
-    );
+    ctx.rotate(r);
 
     ctx.scale(
-        scale,
-        scale
+        s,
+        s
+    );
+
+
+    ctx.strokeStyle =
+        "rgba(126,181,141,.75)";
+
+    ctx.lineWidth =
+        1;
+
+
+    stem(112);
+
+
+    ctx.shadowBlur =
+        22;
+
+    ctx.shadowColor =
+        "rgba(232,177,230,.55)";
+
+
+    ctx.strokeStyle =
+        "rgba(239,192,230,.92)";
+
+
+    /*
+       many overlapping soft petals
+    */
+
+    for(
+        let ring=0;
+        ring<4;
+        ring++
+    ){
+
+        const count =
+            8+
+            ring*2;
+
+
+        const radius =
+            8+
+            ring*5;
+
+
+        for(
+            let i=0;
+            i<count;
+            i++
+        ){
+
+            const a =
+                i*Math.PI*2/count;
+
+
+            ctx.save();
+
+            ctx.rotate(a);
+
+
+            petal(
+                0,
+                -radius,
+                10-ring,
+                17-ring*2,
+                0
+            );
+
+
+            ctx.restore();
+
+        }
+
+    }
+
+
+    ctx.fillStyle =
+        "rgba(255,220,243,.8)";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        4,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+/* =====================================================
+   WILDFLOWER
+===================================================== */
+
+function drawWild(
+    x,
+    y,
+    s,
+    r
+){
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        y
+    );
+
+    ctx.rotate(r);
+
+    ctx.scale(
+        s,
+        s
     );
 
 
     const colors = [
 
-        "rgba(255,184,211,.95)",
+        "rgba(255,183,215,.92)",
 
-        "rgba(194,181,255,.95)",
+        "rgba(199,185,255,.92)",
 
-        "rgba(255,220,150,.95)",
+        "rgba(255,222,153,.92)",
 
-        "rgba(183,228,198,.95)",
+        "rgba(183,232,201,.92)",
 
-        "rgba(240,194,255,.95)"
+        "rgba(240,198,255,.92)"
 
     ];
 
 
-    for (
-        let i = 0;
-        i < 5;
+    for(
+        let i=0;
+        i<5;
         i++
-    ) {
+    ){
 
         const dx =
-            (i - 2) * 14;
+            (i-2)*14;
 
 
         ctx.strokeStyle =
-            "rgba(145,190,151,.72)";
-
-        ctx.lineWidth =
-            .9;
+            "rgba(126,181,141,.65)";
 
 
         ctx.beginPath();
@@ -1318,7 +1931,7 @@ function drawWild(
         );
 
         ctx.quadraticCurveTo(
-            dx * .3,
+            dx*.3,
             50,
             dx,
             110
@@ -1327,15 +1940,22 @@ function drawWild(
         ctx.stroke();
 
 
+        ctx.shadowBlur =
+            13;
+
+        ctx.shadowColor =
+            colors[i];
+
+
         ctx.strokeStyle =
             colors[i];
 
 
-        for (
-            let p = 0;
-            p < 6;
+        for(
+            let p=0;
+            p<6;
             p++
-        ) {
+        ){
 
             ctx.save();
 
@@ -1345,25 +1965,18 @@ function drawWild(
             );
 
             ctx.rotate(
-                p *
-                Math.PI *
-                2 /
-                6
+                p*Math.PI*2/6
             );
 
-            ctx.beginPath();
 
-            ctx.ellipse(
+            petal(
                 0,
                 -8,
                 4,
                 10,
-                0,
-                0,
-                Math.PI * 2
+                0
             );
 
-            ctx.stroke();
 
             ctx.restore();
 
@@ -1377,11 +1990,11 @@ function drawWild(
 }
 
 
-/* ======================================================
-   ANIMATION
-====================================================== */
+/* =====================================================
+   RENDER
+===================================================== */
 
-function animate() {
+function animate(){
 
     ctx.clearRect(
         0,
@@ -1391,12 +2004,12 @@ function animate() {
     );
 
 
-    for (
+    for(
         const p of plants
-    ) {
+    ){
 
         p.age +=
-            0.025;
+            .026;
 
 
         const growth =
@@ -1407,13 +2020,13 @@ function animate() {
 
 
         const scale =
-            p.scale *
+            p.scale*
             growth;
 
 
-        if (
+        if(
             p.type === "rose"
-        ) {
+        ){
 
             drawRose(
                 p.x,
@@ -1425,9 +2038,9 @@ function animate() {
         }
 
 
-        if (
+        if(
             p.type === "tulip"
-        ) {
+        ){
 
             drawTulip(
                 p.x,
@@ -1439,9 +2052,9 @@ function animate() {
         }
 
 
-        if (
+        if(
             p.type === "sunflower"
-        ) {
+        ){
 
             drawSunflower(
                 p.x,
@@ -1453,9 +2066,23 @@ function animate() {
         }
 
 
-        if (
+        if(
+            p.type === "peony"
+        ){
+
+            drawPeony(
+                p.x,
+                p.y,
+                scale,
+                p.rotation
+            );
+
+        }
+
+
+        if(
             p.type === "wild"
-        ) {
+        ){
 
             drawWild(
                 p.x,
@@ -1469,14 +2096,15 @@ function animate() {
     }
 
 
-    for (
-        let i =
-            particles.length - 1;
+    /*
+       FLOATING LIGHT
+    */
 
-        i >= 0;
-
+    for(
+        let i=particles.length-1;
+        i>=0;
         i--
-    ) {
+    ){
 
         const p =
             particles[i];
@@ -1489,15 +2117,15 @@ function animate() {
             p.vy;
 
         p.vy +=
-            .015;
+            .012;
 
         p.life -=
-            .018;
+            .014;
 
 
-        if (
+        if(
             p.life <= 0
-        ) {
+        ){
 
             particles.splice(
                 i,
@@ -1512,16 +2140,16 @@ function animate() {
         ctx.save();
 
         ctx.globalAlpha =
-            p.life;
+            p.life*.7;
 
         ctx.fillStyle =
-            "#fff";
+            "white";
 
         ctx.shadowBlur =
-            12;
+            14;
 
         ctx.shadowColor =
-            "#fff";
+            "white";
 
 
         ctx.beginPath();
@@ -1529,9 +2157,9 @@ function animate() {
         ctx.arc(
             p.x,
             p.y,
-            1.2,
+            p.size,
             0,
-            Math.PI * 2
+            Math.PI*2
         );
 
         ctx.fill();
@@ -1547,19 +2175,20 @@ function animate() {
 
 }
 
+
 animate();
 
 
-/* ======================================================
-   DETECT HAND
-====================================================== */
+/* =====================================================
+   HAND DETECTION
+===================================================== */
 
-async function detectHands() {
+async function detectHands(){
 
-    if (
+    if(
         !handLandmarker ||
         video.readyState < 2
-    ) {
+    ){
 
         requestAnimationFrame(
             detectHands
@@ -1570,16 +2199,16 @@ async function detectHands() {
     }
 
 
-    if (
+    if(
         video.currentTime !==
         lastVideoTime
-    ) {
+    ){
 
         lastVideoTime =
             video.currentTime;
 
 
-        try {
+        try{
 
             const result =
                 handLandmarker
@@ -1592,10 +2221,10 @@ async function detectHands() {
                 );
 
 
-            if (
+            if(
                 result.landmarks &&
                 result.landmarks.length
-            ) {
+            ){
 
                 const lm =
                     result.landmarks[0];
@@ -1605,20 +2234,22 @@ async function detectHands() {
                     countFingers(lm);
 
 
-                const data =
-                    FLOWERS[fingers];
-
-
-                if (data) {
-
-                    if (
-                        lastGesture !==
+                const stable =
+                    stabilizeGesture(
                         fingers
-                    ) {
+                    );
 
-                        lastGesture =
-                            fingers;
 
+                const data =
+                    FLOWERS[stable];
+
+
+                if(data){
+
+                    if(
+                        currentGesture ===
+                        stable
+                    ){
 
                         flower.textContent =
                             data.name;
@@ -1634,7 +2265,11 @@ async function detectHands() {
 
 
                     gesture.textContent =
-                        "GESTURE DETECTED";
+                        stable +
+                        " FINGER" +
+                        (stable === 1 ? "" : "S") +
+                        " · " +
+                        data.name;
 
 
                     const point =
@@ -1651,10 +2286,16 @@ async function detectHands() {
                 }
 
             }
-            else {
+            else{
 
-                lastGesture =
+                currentGesture =
                     null;
+
+                stableGesture =
+                    null;
+
+                gestureFrames =
+                    0;
 
                 gesture.textContent =
                     "SHOW YOUR HAND";
@@ -1662,10 +2303,10 @@ async function detectHands() {
             }
 
         }
-        catch (err) {
+        catch(err){
 
             console.error(
-                "HAND TRACKING ERROR",
+                "HAND TRACKING ERROR:",
                 err
             );
 
@@ -1681,19 +2322,14 @@ async function detectHands() {
 }
 
 
-/* ======================================================
+/* =====================================================
    ENTER
-====================================================== */
+===================================================== */
 
 enter.addEventListener(
     "click",
 
     async () => {
-
-        console.log(
-            "HAND GARDEN: ENTER"
-        );
-
 
         enter.disabled =
             true;
@@ -1707,9 +2343,7 @@ enter.addEventListener(
         );
 
 
-        try {
-
-            /* CAMERA */
+        try{
 
             status.textContent =
                 "CAMERA";
@@ -1718,16 +2352,12 @@ enter.addEventListener(
             await openCamera();
 
 
-            /* MEDIAPIPE */
-
             status.textContent =
                 "TRACKER";
 
 
             await createTracker();
 
-
-            /* READY */
 
             loading.classList.remove(
                 "show"
@@ -1747,7 +2377,7 @@ enter.addEventListener(
 
 
         }
-        catch (err) {
+        catch(err){
 
             console.error(
                 "HAND GARDEN ERROR:",
