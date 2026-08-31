@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0, user-scalable=no">
+
+<meta
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1.0,
+             maximum-scale=1.0,
+             user-scalable=no"
+>
 
 <title>HAND / GARDEN</title>
 
@@ -16,12 +22,18 @@
 
 html,
 body{
+
     margin:0;
+
     width:100%;
     height:100%;
+
     overflow:hidden;
+
     background:#000;
+
     color:#fff;
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -29,6 +41,7 @@ body{
         Arial,
         sans-serif;
 }
+
 
 /* =====================================================
    CAMERA
@@ -50,20 +63,15 @@ body{
     opacity:0;
 
     transition:
-        opacity 1s ease;
+        opacity .8s ease;
 
     z-index:1;
 
-    /*
-       Soft Japanese photobooth look.
-       Bright but not washed out.
-    */
-
     filter:
-        brightness(1.14)
-        contrast(.90)
-        saturate(1.05)
-        blur(.32px);
+        brightness(1.16)
+        contrast(.91)
+        saturate(1.06)
+        blur(.28px);
 }
 
 #video.live{
@@ -72,7 +80,7 @@ body{
 
 
 /* =====================================================
-   CAMERA SOFT LIGHT
+   BEAUTY LIGHT
 ===================================================== */
 
 #beautyGlow{
@@ -89,7 +97,7 @@ body{
 
         radial-gradient(
             ellipse at 50% 42%,
-            rgba(255,255,255,.14) 0%,
+            rgba(255,255,255,.15) 0%,
             rgba(255,255,255,.065) 30%,
             rgba(255,255,255,.018) 52%,
             rgba(255,255,255,0) 76%
@@ -120,7 +128,7 @@ body{
         radial-gradient(
             ellipse at center,
             rgba(0,0,0,0) 35%,
-            rgba(0,0,0,.23) 100%
+            rgba(0,0,0,.22) 100%
         );
 }
 
@@ -163,6 +171,8 @@ body{
 
     justify-content:space-between;
 
+    align-items:center;
+
     font-family:
         "SFMono-Regular",
         Consolas,
@@ -177,8 +187,111 @@ body{
 }
 
 .dim{
+
     color:
         rgba(255,255,255,.20);
+}
+
+
+/* =====================================================
+   TRACKING SIGNAL
+===================================================== */
+
+#tracking{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:
+        rgba(255,255,255,.34);
+
+    transition:
+        color .3s ease;
+}
+
+#trackingDot{
+
+    width:5px;
+    height:5px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.25);
+
+    box-shadow:
+        0 0 0 rgba(255,255,255,0);
+
+    transition:
+        background .25s ease,
+        box-shadow .25s ease,
+        transform .25s ease;
+}
+
+#tracking.tracking{
+
+    color:
+        rgba(255,255,255,.72);
+}
+
+#tracking.tracking #trackingDot{
+
+    background:#fff;
+
+    box-shadow:
+        0 0 9px rgba(255,255,255,.8);
+
+    transform:scale(1.1);
+}
+
+#tracking.searching{
+
+    color:
+        rgba(255,255,255,.38);
+}
+
+#tracking.searching #trackingDot{
+
+    background:
+        rgba(255,255,255,.42);
+
+    box-shadow:
+        0 0 6px rgba(255,255,255,.25);
+
+    animation:
+        pulse 1.2s infinite;
+}
+
+#tracking.lost{
+
+    color:
+        rgba(255,255,255,.22);
+}
+
+#tracking.lost #trackingDot{
+
+    background:
+        rgba(255,255,255,.18);
+
+    box-shadow:none;
+}
+
+@keyframes pulse{
+
+    0%{
+        opacity:.35;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:.35;
+    }
 }
 
 
@@ -202,8 +315,8 @@ body{
         translateY(10px);
 
     transition:
-        opacity .65s ease,
-        transform .65s ease;
+        opacity .55s ease,
+        transform .55s ease;
 
     pointer-events:none;
 }
@@ -273,6 +386,9 @@ body{
         rgba(255,255,255,.34);
 
     text-align:right;
+
+    transition:
+        opacity .25s ease;
 }
 
 
@@ -357,8 +473,7 @@ body{
     border:
         1px solid rgba(255,255,255,.28);
 
-    background:
-        transparent;
+    background:transparent;
 
     color:#fff;
 
@@ -509,6 +624,11 @@ body{
         right:18px;
         bottom:22px;
     }
+
+    #flower{
+
+        font-size:25px;
+    }
 }
 
 </style>
@@ -518,9 +638,7 @@ body{
 <body>
 
 
-<!-- ===================================================
-     CAMERA
-=================================================== -->
+<!-- CAMERA -->
 
 <video
     id="video"
@@ -537,23 +655,36 @@ body{
 
 
 <!-- ===================================================
-     UI
+     TOP
 =================================================== -->
 
 <div id="top">
 
     <div>
+
         HAND
         <span class="dim">/</span>
         GARDEN
+
     </div>
 
-    <div id="status">
-        OFFLINE
+
+    <div
+        id="tracking"
+        class="searching">
+
+        <span id="trackingDot"></span>
+
+        <span id="trackingText">
+            OFFLINE
+        </span>
+
     </div>
 
 </div>
 
+
+<!-- FLOWER INFO -->
 
 <div id="info">
 
@@ -568,14 +699,14 @@ body{
 </div>
 
 
+<!-- GESTURE -->
+
 <div id="gesture">
     SHOW YOUR HAND
 </div>
 
 
-<!-- ===================================================
-     INTRO
-=================================================== -->
+<!-- INTRO -->
 
 <div id="intro">
 
@@ -618,12 +749,23 @@ body{
    MEDIAPIPE
 ===================================================== */
 
+/*
+   IMPORTANT:
+
+   Do NOT use @latest.
+
+   A fixed version prevents CDN changes
+   from unexpectedly breaking the app.
+*/
+
 import {
+
     FilesetResolver,
     HandLandmarker
+
 }
 from
-"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs";
+"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 
 
 /* =====================================================
@@ -637,7 +779,13 @@ const canvas =
     document.getElementById("canvas");
 
 const ctx =
-    canvas.getContext("2d");
+    canvas.getContext(
+        "2d",
+        {
+            alpha:true,
+            desynchronized:true
+        }
+    );
 
 const intro =
     document.getElementById("intro");
@@ -651,8 +799,11 @@ const loading =
 const errorBox =
     document.getElementById("error");
 
-const status =
-    document.getElementById("status");
+const tracking =
+    document.getElementById("tracking");
+
+const trackingText =
+    document.getElementById("trackingText");
 
 const info =
     document.getElementById("info");
@@ -677,10 +828,20 @@ let W =
 let H =
     window.innerHeight;
 
+
+/*
+   Important performance optimisation:
+
+   Retina displays can make a canvas
+   extremely expensive.
+
+   Limit DPR to 1.5.
+*/
+
 let DPR =
     Math.min(
         window.devicePixelRatio || 1,
-        2
+        1.5
     );
 
 
@@ -695,20 +856,22 @@ function resize(){
     DPR =
         Math.min(
             window.devicePixelRatio || 1,
-            2
+            1.5
         );
 
+
     canvas.width =
-        W * DPR;
+        Math.floor(W * DPR);
 
     canvas.height =
-        H * DPR;
+        Math.floor(H * DPR);
 
     canvas.style.width =
         W + "px";
 
     canvas.style.height =
         H + "px";
+
 
     ctx.setTransform(
         DPR,
@@ -723,14 +886,18 @@ function resize(){
 
 resize();
 
+
 window.addEventListener(
     "resize",
-    resize
+    resize,
+    {
+        passive:true
+    }
 );
 
 
 /* =====================================================
-   GLOBAL STATE
+   STATE
 ===================================================== */
 
 let handLandmarker = null;
@@ -745,7 +912,25 @@ let detectionBusy = false;
 
 
 /*
-   Gesture stabilisation.
+   Detection is intentionally
+   much slower than rendering.
+
+   Camera:
+   ~30 FPS
+
+   Detection:
+   ~12–15 FPS
+*/
+
+const DETECTION_INTERVAL =
+    72;
+
+let lastDetectionTime =
+    0;
+
+
+/*
+   Gesture state.
 */
 
 let candidateGesture = null;
@@ -756,7 +941,7 @@ let confirmedGesture = null;
 
 
 /*
-   Flower timing.
+   Flower state.
 */
 
 let lastPlantTime = 0;
@@ -811,6 +996,47 @@ const FLOWERS = {
 
 
 /* =====================================================
+   TRACKING UI
+===================================================== */
+
+function setTrackingState(
+    state
+){
+
+    tracking.classList.remove(
+        "tracking",
+        "searching",
+        "lost"
+    );
+
+    tracking.classList.add(
+        state
+    );
+
+
+    if(
+        state === "tracking"
+    ){
+
+        trackingText.textContent =
+            "TRACKING";
+
+    }else if(
+        state === "searching"
+    ){
+
+        trackingText.textContent =
+            "SEARCHING";
+
+    }else{
+
+        trackingText.textContent =
+            "LOST";
+    }
+}
+
+
+/* =====================================================
    CAMERA
 ===================================================== */
 
@@ -827,6 +1053,14 @@ async function startCamera(){
     }
 
 
+    /*
+       1280×720 is intentional.
+
+       1920×1080 gives almost no benefit
+       to hand recognition but costs much
+       more processing.
+    */
+
     const stream =
         await navigator.mediaDevices.getUserMedia({
 
@@ -839,11 +1073,13 @@ async function startCamera(){
                 },
 
                 width:{
-                    ideal:1920
+                    ideal:1280,
+                    max:1280
                 },
 
                 height:{
-                    ideal:1080
+                    ideal:720,
+                    max:720
                 },
 
                 frameRate:{
@@ -884,11 +1120,16 @@ async function startCamera(){
     video.classList.add(
         "live"
     );
+
+
+    setTrackingState(
+        "searching"
+    );
 }
 
 
 /* =====================================================
-   MEDIAPIPE INITIALISATION
+   MEDIAPIPE
 ===================================================== */
 
 async function startTracker(){
@@ -896,7 +1137,7 @@ async function startTracker(){
     const vision =
         await FilesetResolver.forVisionTasks(
 
-            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
         );
 
 
@@ -915,20 +1156,18 @@ async function startTracker(){
                     delegate:"GPU"
                 },
 
-
                 runningMode:"VIDEO",
 
                 numHands:1,
 
-
                 minHandDetectionConfidence:
-                    .45,
+                    .50,
 
                 minHandPresenceConfidence:
-                    .45,
+                    .50,
 
                 minTrackingConfidence:
-                    .45
+                    .50
             }
         );
 
@@ -986,6 +1225,7 @@ function angle(a,b,c){
     if(
         magnitude === 0
     ){
+
         return 0;
     }
 
@@ -1005,7 +1245,7 @@ function angle(a,b,c){
 
 
 /* =====================================================
-   LONG FINGER CLASSIFICATION
+   FINGER CLASSIFICATION
 ===================================================== */
 
 function longFingerOpen(
@@ -1032,10 +1272,6 @@ function longFingerOpen(
         );
 
 
-    /*
-       Finger length.
-    */
-
     const full =
         distance(
             lm[mcp],
@@ -1050,13 +1286,6 @@ function longFingerOpen(
         );
 
 
-    /*
-       A finger is open only when:
-
-       - both joints are straight
-       - fingertip is sufficiently extended
-    */
-
     return (
 
         a > 148 &&
@@ -1064,21 +1293,14 @@ function longFingerOpen(
         b > 143 &&
 
         full >
-        partial * 1.105
+        partial * 1.10
     );
 }
 
 
 /* =====================================================
-   THUMB CLASSIFICATION
+   THUMB
 ===================================================== */
-
-/*
-   Thumb is deliberately treated differently.
-
-   We compare its geometry against the
-   palm rather than just looking at x/y.
-*/
 
 function thumbOpen(lm){
 
@@ -1097,14 +1319,14 @@ function thumbOpen(lm){
         );
 
 
-    const thumbTipToIndexMCP =
+    const thumbToIndex =
         distance(
             lm[4],
             lm[5]
         );
 
 
-    const thumbTipToPalm =
+    const thumbToPalm =
         distance(
             lm[4],
             lm[0]
@@ -1112,7 +1334,7 @@ function thumbOpen(lm){
 
 
     const spread =
-        thumbTipToIndexMCP /
+        thumbToIndex /
         Math.max(
             palmWidth,
             .0001
@@ -1120,18 +1342,12 @@ function thumbOpen(lm){
 
 
     const palmSpread =
-        thumbTipToPalm /
+        thumbToPalm /
         Math.max(
             palmWidth,
             .0001
         );
 
-
-    /*
-       Strong open thumb.
-
-       Both conditions matter.
-    */
 
     return (
 
@@ -1145,7 +1361,7 @@ function thumbOpen(lm){
 
 
 /* =====================================================
-   GESTURE CLASSIFIER
+   GESTURE
 ===================================================== */
 
 function classifyGesture(lm){
@@ -1156,13 +1372,11 @@ function classifyGesture(lm){
             5,6,7,8
         );
 
-
     const middle =
         longFingerOpen(
             lm,
             9,10,11,12
         );
-
 
     const ring =
         longFingerOpen(
@@ -1170,22 +1384,18 @@ function classifyGesture(lm){
             13,14,15,16
         );
 
-
     const pinky =
         longFingerOpen(
             lm,
             17,18,19,20
         );
 
-
     const thumb =
         thumbOpen(lm);
 
 
     /*
-       -----------------------------------------------
-       OPEN PALM
-       -----------------------------------------------
+       5
     */
 
     if(
@@ -1201,15 +1411,10 @@ function classifyGesture(lm){
 
 
     /*
-       -----------------------------------------------
-       FOUR
-       -----------------------------------------------
+       4
 
-       Four long fingers open,
-       thumb clearly folded.
-
-       This is deliberately checked
-       before 3 / 2 / 1.
+       Explicitly check this before
+       3 / 2 / 1.
     */
 
     if(
@@ -1225,9 +1430,7 @@ function classifyGesture(lm){
 
 
     /*
-       -----------------------------------------------
-       THREE
-       -----------------------------------------------
+       3
     */
 
     if(
@@ -1242,9 +1445,7 @@ function classifyGesture(lm){
 
 
     /*
-       -----------------------------------------------
-       TWO
-       -----------------------------------------------
+       2
     */
 
     if(
@@ -1259,9 +1460,7 @@ function classifyGesture(lm){
 
 
     /*
-       -----------------------------------------------
-       ONE
-       -----------------------------------------------
+       1
     */
 
     if(
@@ -1275,25 +1474,19 @@ function classifyGesture(lm){
     }
 
 
-    /*
-       No confident gesture.
-    */
-
     return null;
 }
 
 
 /* =====================================================
-   GESTURE STABILISER
+   STABILISER
 ===================================================== */
 
 function stabilizeGesture(next){
 
-    /*
-       No valid gesture.
-    */
-
-    if(next === null){
+    if(
+        next === null
+    ){
 
         candidateGesture =
             null;
@@ -1304,10 +1497,6 @@ function stabilizeGesture(next){
         return confirmedGesture;
     }
 
-
-    /*
-       Same candidate.
-    */
 
     if(
         next === candidateGesture
@@ -1326,13 +1515,15 @@ function stabilizeGesture(next){
 
 
     /*
-       Need consecutive frames.
+       Six frames would be unnecessarily
+       slow now that detection is throttled.
 
-       This prevents 4 ↔ 5 flicker.
+       Four consecutive detections
+       gives a better balance.
     */
 
     if(
-        candidateFrames >= 6
+        candidateFrames >= 4
     ){
 
         confirmedGesture =
@@ -1357,6 +1548,7 @@ function screenPosition(p){
 
         y:
             p.y*H
+
     };
 }
 
@@ -1375,11 +1567,11 @@ function plantFlower(
 
 
     /*
-       Prevent excessive spawning.
+       One flower roughly every second.
     */
 
     if(
-        now-lastPlantTime < 900
+        now-lastPlantTime < 950
     ){
 
         return;
@@ -1408,11 +1600,16 @@ function plantFlower(
             (Math.random()-.5)*.28,
 
         age:0
+
     });
 
 
+    /*
+       Keep memory bounded.
+    */
+
     if(
-        plants.length > 36
+        plants.length > 30
     ){
 
         plants.shift();
@@ -1420,12 +1617,15 @@ function plantFlower(
 
 
     /*
-       Soft particles.
+       Reduced particle count.
+
+       The original 24 × many flowers
+       becomes surprisingly expensive.
     */
 
     for(
         let i=0;
-        i<24;
+        i<12;
         i++
     ){
 
@@ -1438,16 +1638,17 @@ function plantFlower(
                 position.y,
 
             vx:
-                (Math.random()-.5)*1.5,
+                (Math.random()-.5)*1.3,
 
             vy:
-                (Math.random()-.9)*1.5,
+                (Math.random()-.9)*1.3,
 
             size:
                 .5+
-                Math.random()*1.7,
+                Math.random()*1.5,
 
             life:1
+
         });
     }
 }
@@ -1538,21 +1739,18 @@ function drawRose(
 
     ctx.scale(s,s);
 
-
     ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
-
     stem(115);
 
 
-    ctx.shadowBlur=17;
+    ctx.shadowBlur=14;
 
     ctx.shadowColor =
-        "rgba(255,150,200,.55)";
-
+        "rgba(255,150,200,.5)";
 
     ctx.strokeStyle =
         "rgba(255,175,208,.92)";
@@ -1582,14 +1780,13 @@ function drawRose(
             petal(
 
                 0,
-
                 -radius,
 
                 9-layer,
-
                 17-layer*2,
 
                 i*Math.PI*2/count
+
             );
         }
     }
@@ -1615,21 +1812,18 @@ function drawTulip(
 
     ctx.scale(s,s);
 
-
     ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
-
     stem(112);
 
 
-    ctx.shadowBlur=18;
+    ctx.shadowBlur=15;
 
     ctx.shadowColor =
-        "rgba(255,170,205,.52)";
-
+        "rgba(255,170,205,.5)";
 
     ctx.strokeStyle =
         "rgba(255,185,215,.94)";
@@ -1643,43 +1837,30 @@ function drawTulip(
     );
 
     ctx.bezierCurveTo(
-        -30,
-        -34,
-        -17,
-        -46,
-        -7,
-        -25
+        -30,-34,
+        -17,-46,
+        -7,-25
     );
 
     ctx.bezierCurveTo(
-        -2,
-        -49,
-        5,
-        -51,
-        13,
-        -26
+        -2,-49,
+        5,-51,
+        13,-26
     );
 
     ctx.bezierCurveTo(
-        23,
-        -46,
-        31,
-        -31,
-        28,
-        -5
+        23,-46,
+        31,-31,
+        28,-5
     );
 
     ctx.bezierCurveTo(
-        20,
-        18,
-        -20,
-        18,
-        -28,
-        -5
+        20,18,
+        -20,18,
+        -28,-5
     );
 
     ctx.stroke();
-
 
     ctx.restore();
 }
@@ -1701,21 +1882,18 @@ function drawSunflower(
 
     ctx.scale(s,s);
 
-
     ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
-
     stem(112);
 
 
-    ctx.shadowBlur=17;
+    ctx.shadowBlur=14;
 
     ctx.shadowColor =
-        "rgba(255,220,120,.52)";
-
+        "rgba(255,220,120,.5)";
 
     ctx.strokeStyle =
         "rgba(255,218,128,.95)";
@@ -1748,7 +1926,7 @@ function drawSunflower(
     }
 
 
-    ctx.shadowBlur=10;
+    ctx.shadowBlur=7;
 
     ctx.fillStyle =
         "rgba(222,176,92,.95)";
@@ -1765,7 +1943,6 @@ function drawSunflower(
     );
 
     ctx.fill();
-
 
     ctx.restore();
 }
@@ -1787,21 +1964,18 @@ function drawPeony(
 
     ctx.scale(s,s);
 
-
     ctx.strokeStyle =
         "rgba(126,181,141,.75)";
 
     ctx.lineWidth=1;
 
-
     stem(112);
 
 
-    ctx.shadowBlur=24;
+    ctx.shadowBlur=19;
 
     ctx.shadowColor =
-        "rgba(232,177,230,.60)";
-
+        "rgba(232,177,230,.55)";
 
     ctx.strokeStyle =
         "rgba(239,192,230,.94)";
@@ -1863,7 +2037,6 @@ function drawPeony(
 
     ctx.fill();
 
-
     ctx.restore();
 }
 
@@ -1888,14 +2061,11 @@ function drawWildflower(
     const colors=[
 
         "rgba(255,183,215,.94)",
-
         "rgba(199,185,255,.94)",
-
         "rgba(255,222,153,.94)",
-
         "rgba(183,232,201,.94)",
-
         "rgba(240,198,255,.94)"
+
     ];
 
 
@@ -1932,7 +2102,7 @@ function drawWildflower(
         ctx.stroke();
 
 
-        ctx.shadowBlur=14;
+        ctx.shadowBlur=11;
 
         ctx.shadowColor =
             colors[i];
@@ -1976,7 +2146,7 @@ function drawWildflower(
 
 
 /* =====================================================
-   VISUAL LOOP
+   RENDER LOOP
 ===================================================== */
 
 function render(){
@@ -1990,12 +2160,18 @@ function render(){
 
 
     /*
-       Flowers.
+       Flowers
     */
 
     for(
-        const p of plants
+        let i=0;
+        i<plants.length;
+        i++
     ){
+
+        const p =
+            plants[i];
+
 
         p.age += .026;
 
@@ -2012,74 +2188,72 @@ function render(){
             growth;
 
 
-        if(
-            p.type === "rose"
-        ){
+        switch(p.type){
 
-            drawRose(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
-            );
-        }
+            case "rose":
 
+                drawRose(
+                    p.x,
+                    p.y,
+                    scale,
+                    p.rotation
+                );
 
-        if(
-            p.type === "tulip"
-        ){
-
-            drawTulip(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
-            );
-        }
+                break;
 
 
-        if(
-            p.type === "sunflower"
-        ){
+            case "tulip":
 
-            drawSunflower(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
-            );
-        }
+                drawTulip(
+                    p.x,
+                    p.y,
+                    scale,
+                    p.rotation
+                );
 
-
-        if(
-            p.type === "peony"
-        ){
-
-            drawPeony(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
-            );
-        }
+                break;
 
 
-        if(
-            p.type === "wild"
-        ){
+            case "sunflower":
 
-            drawWildflower(
-                p.x,
-                p.y,
-                scale,
-                p.rotation
-            );
+                drawSunflower(
+                    p.x,
+                    p.y,
+                    scale,
+                    p.rotation
+                );
+
+                break;
+
+
+            case "peony":
+
+                drawPeony(
+                    p.x,
+                    p.y,
+                    scale,
+                    p.rotation
+                );
+
+                break;
+
+
+            case "wild":
+
+                drawWildflower(
+                    p.x,
+                    p.y,
+                    scale,
+                    p.rotation
+                );
+
+                break;
         }
     }
 
 
     /*
-       Particles.
+       Particles
     */
 
     for(
@@ -2098,7 +2272,7 @@ function render(){
 
         p.vy += .012;
 
-        p.life -= .014;
+        p.life -= .018;
 
 
         if(
@@ -2114,17 +2288,10 @@ function render(){
         }
 
 
-        ctx.save();
-
         ctx.globalAlpha =
             p.life*.7;
 
         ctx.fillStyle =
-            "#fff";
-
-        ctx.shadowBlur=14;
-
-        ctx.shadowColor =
             "#fff";
 
 
@@ -2139,9 +2306,10 @@ function render(){
         );
 
         ctx.fill();
-
-        ctx.restore();
     }
+
+
+    ctx.globalAlpha=1;
 
 
     requestAnimationFrame(
@@ -2154,10 +2322,12 @@ render();
 
 
 /* =====================================================
-   HAND PROCESSING
+   HAND DETECTION
 ===================================================== */
 
-function processHandFrame(){
+function processHandFrame(
+    timestamp
+){
 
     if(
         !trackerReady ||
@@ -2177,17 +2347,36 @@ function processHandFrame(){
     }
 
 
-    /*
-       Never allow concurrent MediaPipe
-       inference.
-    */
-
     if(
         detectionBusy
     ){
 
         return;
     }
+
+
+    /*
+       THROTTLE
+
+       This is the main performance fix.
+
+       Camera can run at 30 FPS,
+       but hand recognition only needs
+       roughly 13 FPS.
+    */
+
+    if(
+        timestamp-lastDetectionTime
+        <
+        DETECTION_INTERVAL
+    ){
+
+        return;
+    }
+
+
+    lastDetectionTime =
+        timestamp;
 
 
     detectionBusy=true;
@@ -2198,19 +2387,20 @@ function processHandFrame(){
         const result =
             handLandmarker.detectForVideo(
                 video,
-                performance.now()
+                timestamp
             );
 
-
-        /*
-           HAND FOUND
-        */
 
         if(
             result &&
             result.landmarks &&
             result.landmarks.length
         ){
+
+            setTrackingState(
+                "tracking"
+            );
+
 
             const lm =
                 result.landmarks[0];
@@ -2252,27 +2442,24 @@ function processHandFrame(){
                 gesture.textContent =
 
                     stableGesture +
-
                     " FINGER" +
-
                     (
                         stableGesture === 1
                         ? ""
                         : "S"
                     ) +
-
                     " · " +
-
                     data.name;
 
 
                 /*
-                   Index fingertip is used
-                   as the garden planting
-                   position.
+                   Plant position.
 
-                   For open palm, use the
-                   palm center instead.
+                   5:
+                   palm centre.
+
+                   1–4:
+                   index fingertip.
                 */
 
                 let point;
@@ -2282,7 +2469,7 @@ function processHandFrame(){
                     stableGesture === 5
                 ){
 
-                    point = {
+                    point={
 
                         x:
                             (
@@ -2295,6 +2482,7 @@ function processHandFrame(){
                                 lm[0].y+
                                 lm[9].y
                             )/2
+
                     };
 
                 }else{
@@ -2329,10 +2517,14 @@ function processHandFrame(){
         }else{
 
             /*
-               No hand.
-
-               Reset classifier.
+               Camera is alive,
+               but no hand.
             */
+
+            setTrackingState(
+                "searching"
+            );
+
 
             candidateGesture =
                 null;
@@ -2354,11 +2546,11 @@ function processHandFrame(){
         }
 
 
-    }catch(error){
+    }catch(err){
 
         console.warn(
             "Hand tracking:",
-            error
+            err
         );
 
     }finally{
@@ -2374,57 +2566,67 @@ function processHandFrame(){
 
 function startDetectionLoop(){
 
+    /*
+       Modern browsers:
+       requestVideoFrameCallback.
+
+       This avoids running detection
+       against duplicate video frames.
+    */
+
     if(
-        !video.requestVideoFrameCallback
+        video.requestVideoFrameCallback
     ){
 
-        /*
-           Fallback.
-        */
-
-        let lastRun=0;
-
-
-        function fallback(now){
+        function onVideoFrame(
+            now,
+            metadata
+        ){
 
             if(
-                now-lastRun >= 33
+                !running
             ){
 
-                lastRun=now;
-
-                processHandFrame();
+                return;
             }
 
 
-            if(running){
+            /*
+               performance.now() is used because
+               MediaPipe requires monotonically
+               increasing timestamps.
+            */
 
-                requestAnimationFrame(
-                    fallback
-                );
-            }
+            processHandFrame(
+                performance.now()
+            );
+
+
+            video.requestVideoFrameCallback(
+                onVideoFrame
+            );
         }
 
 
-        requestAnimationFrame(
-            fallback
+        video.requestVideoFrameCallback(
+            onVideoFrame
         );
+
 
         return;
     }
 
 
     /*
-       Preferred modern path.
-
-       The callback fires when a
-       genuinely new video frame
-       is available.
+       Fallback for older browsers.
     */
 
-    function onVideoFrame(
-        now,
-        metadata
+    let lastFrame =
+        0;
+
+
+    function fallback(
+        now
     ){
 
         if(
@@ -2435,30 +2637,45 @@ function startDetectionLoop(){
         }
 
 
-        processHandFrame();
+        if(
+            now-lastFrame >= 33
+        ){
+
+            lastFrame =
+                now;
+
+            processHandFrame(
+                now
+            );
+        }
 
 
-        video.requestVideoFrameCallback(
-            onVideoFrame
+        requestAnimationFrame(
+            fallback
         );
     }
 
 
-    video.requestVideoFrameCallback(
-        onVideoFrame
+    requestAnimationFrame(
+        fallback
     );
 }
 
 
 /* =====================================================
-   START APP
+   START
 ===================================================== */
 
 enter.addEventListener(
     "click",
     async()=>{
 
-        if(running)return;
+        if(
+            running
+        ){
+
+            return;
+        }
 
 
         enter.disabled=true;
@@ -2474,29 +2691,26 @@ enter.addEventListener(
 
         try{
 
-            status.textContent =
-                "CAMERA";
+            setTrackingState(
+                "searching"
+            );
 
 
             await startCamera();
 
 
-            status.textContent =
-                "TRACKER";
+            loading.textContent =
+                "LOADING TRACKER";
 
 
             await startTracker();
 
 
-            /*
-               Everything is ready.
-            */
-
             running=true;
 
 
-            status.textContent =
-                "LIVE";
+            trackingText.textContent =
+                "SEARCHING";
 
 
             loading.classList.remove(
@@ -2509,14 +2723,18 @@ enter.addEventListener(
             );
 
 
+            gesture.textContent =
+                "SHOW YOUR HAND";
+
+
             startDetectionLoop();
 
 
-        }catch(error){
+        }catch(err){
 
             console.error(
                 "HAND GARDEN ERROR:",
-                error
+                err
             );
 
 
@@ -2530,12 +2748,12 @@ enter.addEventListener(
             );
 
 
-            status.textContent =
-                "ERROR";
+            setTrackingState(
+                "lost"
+            );
 
 
             enter.disabled=false;
-
 
             enter.textContent =
                 "RETRY";
@@ -2545,20 +2763,12 @@ enter.addEventListener(
 
 
 /* =====================================================
-   PAGE VISIBILITY
+   VISIBILITY
 ===================================================== */
 
 document.addEventListener(
     "visibilitychange",
     ()=>{
-
-        /*
-           When tab is hidden, we don't
-           need to force inference.
-
-           When visible again, the
-           video-frame callback resumes.
-        */
 
         if(
             document.hidden
@@ -2570,6 +2780,10 @@ document.addEventListener(
         }else if(
             running
         ){
+
+            setTrackingState(
+                "searching"
+            );
 
             gesture.textContent =
                 "SHOW YOUR HAND";
