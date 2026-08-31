@@ -1,340 +1,1623 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Hand Garden 🌸</title>
+<title>Hand Garden</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #08110d;
+        font-family: Georgia, "Times New Roman", serif;
+        color: #fff;
+    }
+
+    #app {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background:
+            radial-gradient(
+                circle at 50% 40%,
+                rgba(80, 120, 90, 0.18),
+                transparent 45%
+            ),
+            linear-gradient(
+                180deg,
+                #07100c 0%,
+                #0c1a12 55%,
+                #111b12 100%
+            );
+    }
+
+    #video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+        opacity: 0.72;
+        filter: saturate(0.78) brightness(0.72);
+    }
+
+    #canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    /* dark cinematic overlay */
+    #app::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(
+                ellipse at center,
+                transparent 35%,
+                rgba(0,0,0,0.42) 100%
+            );
+        z-index: 2;
+    }
+
+    header {
+        position: absolute;
+        z-index: 5;
+        top: 32px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .title {
+        font-size: clamp(34px, 5vw, 64px);
+        letter-spacing: 0.06em;
+        font-weight: 400;
+        text-shadow: 0 2px 25px rgba(0,0,0,0.5);
+    }
+
+    .subtitle {
+        margin-top: 5px;
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        opacity: 0.65;
+    }
+
+    #status {
+        position: absolute;
+        z-index: 6;
+        top: 125px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        opacity: 0.7;
+        white-space: nowrap;
+    }
+
+    #meaning {
+        position: absolute;
+        z-index: 6;
+        left: 50%;
+        bottom: 65px;
+        transform: translateX(-50%);
+        text-align: center;
+        width: min(90vw, 600px);
+        pointer-events: none;
+    }
+
+    #flowerName {
+        font-size: clamp(30px, 5vw, 52px);
+        letter-spacing: 0.08em;
+        font-weight: 400;
+        text-shadow: 0 0 30px rgba(255,255,255,0.25);
+    }
+
+    #flowerMeaning {
+        margin-top: 8px;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.85;
+    }
+
+    #flowerQuote {
+        margin-top: 14px;
+        font-size: 15px;
+        font-style: italic;
+        opacity: 0.72;
+    }
+
+    #instructions {
+        position: absolute;
+        z-index: 6;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+        padding: 22px;
+        border: 1px solid rgba(255,255,255,0.18);
+        border-radius: 18px;
+        background: rgba(5, 12, 8, 0.38);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .instruction-title {
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        opacity: 0.55;
+        margin-bottom: 16px;
+    }
+
+    .gesture {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 13px 0;
+    }
+
+    .gesture-icon {
+        font-size: 23px;
+        width: 30px;
+    }
+
+    .gesture-text {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.05em;
+    }
+
+    .gesture-text span {
+        display: block;
+        margin-top: 3px;
+        opacity: 0.48;
+        font-size: 9px;
+        text-transform: uppercase;
+    }
+
+    #hint {
+        position: absolute;
+        z-index: 6;
+        right: 30px;
+        bottom: 35px;
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        opacity: 0.4;
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 700px) {
+        #instructions {
+            left: 15px;
+            top: auto;
+            bottom: 25px;
+            transform: none;
+            width: 175px;
+            padding: 15px;
+            opacity: 0.82;
         }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #111;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
+        .gesture {
+            margin: 8px 0;
         }
 
-        h1 {
-            margin: 30px 0 10px;
-            font-size: 42px;
+        #meaning {
+            bottom: 150px;
         }
 
-        #status {
-            color: #aaa;
-            font-size: 17px;
-            min-height: 25px;
+        #hint {
+            display: none;
         }
-
-        #result {
-            font-size: 30px;
-            margin: 15px;
-        }
-
-        .camera {
-            position: relative;
-            width: 90%;
-            max-width: 800px;
-            margin: 20px auto;
-        }
-
-        video {
-            width: 100%;
-            display: block;
-            border-radius: 24px;
-            transform: scaleX(-1);
-        }
-
-        canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            transform: scaleX(-1);
-            pointer-events: none;
-        }
-
-        #debug {
-            color: #666;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-    </style>
+    }
+</style>
 </head>
+
 
 <body>
 
-    <h1>🌸 Hand Garden</h1>
+<div id="app">
 
-    <div id="status">Loading...</div>
+    <video id="video" autoplay playsinline muted></video>
 
-    <div id="result">👋 Show me your hand</div>
+    <canvas id="canvas"></canvas>
 
-    <div class="camera">
-        <video id="video" autoplay playsinline muted></video>
-        <canvas id="canvas"></canvas>
+
+    <header>
+        <div class="title">Hand Garden</div>
+        <div class="subtitle">Bloom with your gesture</div>
+    </header>
+
+
+    <div id="status">
+        Preparing the garden...
     </div>
 
-    <div id="debug"></div>
 
+    <div id="instructions">
 
-    <script type="module">
+        <div class="instruction-title">
+            Your gestures
+        </div>
 
-        import {
-            FilesetResolver,
-            HandLandmarker
-        } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/vision_bundle.mjs";
+        <div class="gesture">
+            <div class="gesture-icon">☝️</div>
+            <div class="gesture-text">
+                Rose
+                <span>Love · Courage</span>
+            </div>
+        </div>
 
+        <div class="gesture">
+            <div class="gesture-icon">✌️</div>
+            <div class="gesture-text">
+                Tulip
+                <span>New Beginnings</span>
+            </div>
+        </div>
 
-        const video = document.getElementById("video");
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
+        <div class="gesture">
+            <div class="gesture-icon">🤟</div>
+            <div class="gesture-text">
+                Sunflower
+                <span>Joy · Positivity</span>
+            </div>
+        </div>
 
-        const status = document.getElementById("status");
-        const result = document.getElementById("result");
-        const debug = document.getElementById("debug");
+        <div class="gesture">
+            <div class="gesture-icon">🖐️</div>
+            <div class="gesture-text">
+                Wildflowers
+                <span>Freedom · Gratitude</span>
+            </div>
+        </div>
 
+    </div>
 
-        let handLandmarker = null;
-        let lastVideoTime = -1;
 
+    <div id="meaning">
 
-        // ------------------------------------------------
-        // CAMERA
-        // ------------------------------------------------
+        <div id="flowerName">
+            Your garden is waiting
+        </div>
 
-        async function startCamera() {
+        <div id="flowerMeaning">
+            Show me your hand
+        </div>
 
-            status.textContent = "Starting camera...";
+        <div id="flowerQuote">
+            Every gesture plants a little meaning.
+        </div>
 
-            const stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 },
-                    facingMode: "user"
-                },
-                audio: false
-            });
+    </div>
 
-            video.srcObject = stream;
 
-            await video.play();
+    <div id="hint">
+        Move your hand slowly · let the garden grow
+    </div>
 
-            status.textContent = "Camera ready 📷";
-        }
+</div>
 
 
-        // ------------------------------------------------
-        // MEDIAPIPE
-        // ------------------------------------------------
+<script type="module">
 
-        async function startHandTracking() {
+import {
+    FilesetResolver,
+    HandLandmarker
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs";
 
-            status.textContent = "Loading hand tracking...";
 
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-            const vision = await FilesetResolver.forVisionTasks(
-                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-            );
+const status = document.getElementById("status");
 
+const flowerName = document.getElementById("flowerName");
+const flowerMeaning = document.getElementById("flowerMeaning");
+const flowerQuote = document.getElementById("flowerQuote");
 
-            handLandmarker =
-                await HandLandmarker.createFromOptions(
-                    vision,
-                    {
-                        baseOptions: {
-                            modelAssetPath:
-                                "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
 
-                            delegate: "GPU"
-                        },
+let handLandmarker;
 
-                        runningMode: "VIDEO",
+let lastVideoTime = -1;
 
-                        numHands: 1,
+let currentGesture = null;
 
-                        minHandDetectionConfidence: 0.5,
+let flowers = [];
 
-                        minHandPresenceConfidence: 0.5,
+let particles = [];
 
-                        minTrackingConfidence: 0.5
-                    }
-                );
+let lastFlowerTime = 0;
 
+let width = 0;
+let height = 0;
 
-            status.textContent = "Hand tracking ready ✨";
 
-            resizeCanvas();
+/* --------------------------------------------------
+   FLOWER DATA
+-------------------------------------------------- */
 
-            detectHands();
-        }
+const FLOWERS = {
 
+    one: {
+        name: "ROSE",
+        meaning: "Love · Beauty · Courage",
+        quote: "The rose blooms when the heart is brave enough to open.",
+        type: "rose"
+    },
 
-        // ------------------------------------------------
-        // CANVAS
-        // ------------------------------------------------
+    two: {
+        name: "TULIP",
+        meaning: "New Beginnings · Forgiveness",
+        quote: "Every spring begins with the courage to start again.",
+        type: "tulip"
+    },
 
-        function resizeCanvas() {
+    three: {
+        name: "SUNFLOWER",
+        meaning: "Joy · Positivity · Adoration",
+        quote: "Turn toward what makes you feel alive.",
+        type: "sunflower"
+    },
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-        }
+    five: {
+        name: "WILDFLOWERS",
+        meaning: "Freedom · Gratitude · Abundance",
+        quote: "Some of the most beautiful things are never meant to be controlled.",
+        type: "wildflower"
+    }
 
+};
 
-        // ------------------------------------------------
-        // DETECT HAND
-        // ------------------------------------------------
 
-        function detectHands() {
+/* --------------------------------------------------
+   RESIZE
+-------------------------------------------------- */
 
-            if (
-                handLandmarker &&
-                video.readyState >= 2 &&
-                video.currentTime !== lastVideoTime
-            ) {
+function resize() {
 
-                lastVideoTime = video.currentTime;
+    width = window.innerWidth;
+    height = window.innerHeight;
 
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-                const detection =
-                    handLandmarker.detectForVideo(
-                        video,
-                        performance.now()
-                    );
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
 
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
 
-                ctx.clearRect(
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
 
+window.addEventListener("resize", resize);
 
-                if (detection.landmarks.length > 0) {
+resize();
 
-                    const landmarks =
-                        detection.landmarks[0];
 
-                    result.textContent =
-                        "✋ Hand detected!";
+/* --------------------------------------------------
+   CAMERA
+-------------------------------------------------- */
 
-                    debug.textContent =
-                        "Tracking hand landmarks...";
+async function startCamera() {
 
+    const stream = await navigator.mediaDevices.getUserMedia({
 
-                    // Draw hand points
-                    for (const point of landmarks) {
-
-                        const x =
-                            point.x * canvas.width;
-
-                        const y =
-                            point.y * canvas.height;
-
-
-                        ctx.beginPath();
-
-                        ctx.arc(
-                            x,
-                            y,
-                            5,
-                            0,
-                            Math.PI * 2
-                        );
-
-                        ctx.fillStyle = "#ffffff";
-
-                        ctx.fill();
-                    }
-
-
-                    // Highlight index finger
-                    const indexFinger =
-                        landmarks[8];
-
-                    const ix =
-                        indexFinger.x * canvas.width;
-
-                    const iy =
-                        indexFinger.y * canvas.height;
-
-
-                    ctx.beginPath();
-
-                    ctx.arc(
-                        ix,
-                        iy,
-                        18,
-                        0,
-                        Math.PI * 2
-                    );
-
-                    ctx.strokeStyle = "#ffffff";
-
-                    ctx.lineWidth = 3;
-
-                    ctx.stroke();
-
-                } else {
-
-                    result.textContent =
-                        "👋 Show me your hand";
-
-                    debug.textContent =
-                        "No hand detected";
-                }
+        video: {
+            facingMode: "user",
+            width: {
+                ideal: 1280
+            },
+            height: {
+                ideal: 720
             }
+        },
+
+        audio: false
+
+    });
+
+    video.srcObject = stream;
+
+    await video.play();
+}
 
 
-            requestAnimationFrame(detectHands);
-        }
+/* --------------------------------------------------
+   MEDIAPIPE
+-------------------------------------------------- */
+
+async function startMediaPipe() {
+
+    status.textContent = "Growing the garden...";
 
 
-        // ------------------------------------------------
-        // START
-        // ------------------------------------------------
+    const vision =
+        await FilesetResolver.forVisionTasks(
 
-        async function start() {
+            "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm"
 
-            try {
-
-                await startCamera();
-
-                await startHandTracking();
-
-            } catch (error) {
-
-                console.error(error);
-
-                status.textContent =
-                    "Something went wrong 😭";
-
-                result.textContent =
-                    "Open Console for details";
-
-                debug.textContent =
-                    error.message;
-            }
-        }
-
-
-        window.addEventListener(
-            "resize",
-            resizeCanvas
         );
 
 
-        start();
+    handLandmarker =
+        await HandLandmarker.createFromOptions(
 
-    </script>
+            vision,
+
+            {
+
+                baseOptions: {
+
+                    modelAssetPath:
+                        "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
+
+                    delegate: "GPU"
+
+                },
+
+                runningMode: "VIDEO",
+
+                numHands: 1,
+
+                minHandDetectionConfidence: 0.5,
+
+                minHandPresenceConfidence: 0.5,
+
+                minTrackingConfidence: 0.5
+
+            }
+
+        );
+
+
+    status.textContent = "The garden is listening ✨";
+}
+
+
+/* --------------------------------------------------
+   FINGER COUNT
+-------------------------------------------------- */
+
+function countFingers(landmarks, handedness) {
+
+    let count = 0;
+
+
+    /*
+        Index
+    */
+
+    if (landmarks[8].y < landmarks[6].y) {
+        count++;
+    }
+
+
+    /*
+        Middle
+    */
+
+    if (landmarks[12].y < landmarks[10].y) {
+        count++;
+    }
+
+
+    /*
+        Ring
+    */
+
+    if (landmarks[16].y < landmarks[14].y) {
+        count++;
+    }
+
+
+    /*
+        Pinky
+    */
+
+    if (landmarks[20].y < landmarks[18].y) {
+        count++;
+    }
+
+
+    /*
+        Thumb
+
+        MediaPipe coordinates:
+        x = 0 is left
+        x = 1 is right
+
+        The direction depends on which hand
+        was detected.
+    */
+
+    const thumbTip = landmarks[4];
+    const thumbIP = landmarks[3];
+
+    if (handedness === "Right") {
+
+        if (thumbTip.x < thumbIP.x) {
+            count++;
+        }
+
+    } else {
+
+        if (thumbTip.x > thumbIP.x) {
+            count++;
+        }
+    }
+
+
+    return count;
+}
+
+
+/* --------------------------------------------------
+   GESTURE
+-------------------------------------------------- */
+
+function getGesture(fingers) {
+
+    if (fingers === 1) {
+        return "one";
+    }
+
+    if (fingers === 2) {
+        return "two";
+    }
+
+    if (fingers === 3) {
+        return "three";
+    }
+
+    if (fingers === 5) {
+        return "five";
+    }
+
+    return null;
+}
+
+
+/* --------------------------------------------------
+   SCREEN POSITION
+-------------------------------------------------- */
+
+function landmarkToScreen(point) {
+
+    /*
+        Video is mirrored visually,
+        so reverse X.
+    */
+
+    return {
+
+        x: (1 - point.x) * width,
+
+        y: point.y * height
+
+    };
+}
+
+
+/* --------------------------------------------------
+   CHANGE FLOWER
+-------------------------------------------------- */
+
+function activateFlower(gesture, position) {
+
+    if (!FLOWERS[gesture]) {
+        return;
+    }
+
+
+    const flower = FLOWERS[gesture];
+
+
+    flowerName.textContent = flower.name;
+
+    flowerMeaning.textContent = flower.meaning;
+
+    flowerQuote.textContent = flower.quote;
+
+
+    /*
+        Don't plant too rapidly.
+    */
+
+    const now = Date.now();
+
+
+    if (
+        gesture === currentGesture &&
+        now - lastFlowerTime < 900
+    ) {
+        return;
+    }
+
+
+    currentGesture = gesture;
+
+    lastFlowerTime = now;
+
+
+    flowers.push({
+
+        x: position.x,
+
+        y: position.y,
+
+        type: flower.type,
+
+        life: 0,
+
+        scale: 0.2 + Math.random() * 0.15,
+
+        rotation:
+            (Math.random() - 0.5) * 0.25
+
+    });
+
+
+    /*
+        Keep the garden beautiful,
+        not overloaded.
+    */
+
+    if (flowers.length > 32) {
+        flowers.shift();
+    }
+
+
+    createParticles(
+        position.x,
+        position.y
+    );
+}
+
+
+/* --------------------------------------------------
+   PARTICLES
+-------------------------------------------------- */
+
+function createParticles(x, y) {
+
+    for (let i = 0; i < 16; i++) {
+
+        particles.push({
+
+            x: x,
+
+            y: y,
+
+            vx: (Math.random() - 0.5) * 1.5,
+
+            vy: -Math.random() * 1.8,
+
+            life: 1,
+
+            size: 2 + Math.random() * 3,
+
+            rotation: Math.random() * Math.PI
+
+        });
+    }
+}
+
+
+/* --------------------------------------------------
+   DRAW ROSE
+-------------------------------------------------- */
+
+function drawRose(x, y, scale, rotation) {
+
+    ctx.save();
+
+    ctx.translate(x, y);
+
+    ctx.rotate(rotation);
+
+    ctx.scale(scale, scale);
+
+
+    /*
+        Stem
+    */
+
+    ctx.strokeStyle = "rgba(89,150,93,0.9)";
+
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, 8);
+
+    ctx.quadraticCurveTo(
+        -5,
+        35,
+        2,
+        75
+    );
+
+    ctx.stroke();
+
+
+    /*
+        Leaves
+    */
+
+    ctx.fillStyle = "#507f54";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        -8,
+        45,
+        7,
+        16,
+        -0.7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        9,
+        58,
+        7,
+        16,
+        0.7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /*
+        Rose petals
+    */
+
+    const gradient =
+        ctx.createRadialGradient(
+            0,
+            0,
+            2,
+            0,
+            0,
+            42
+        );
+
+    gradient.addColorStop(
+        0,
+        "#fff0f5"
+    );
+
+    gradient.addColorStop(
+        0.35,
+        "#ff9fbe"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#c52d62"
+    );
+
+    ctx.fillStyle = gradient;
+
+
+    for (let i = 0; i < 12; i++) {
+
+        const angle =
+            i * Math.PI * 2 / 12;
+
+        const px =
+            Math.cos(angle) * 18;
+
+        const py =
+            Math.sin(angle) * 18;
+
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            px,
+            py,
+            18,
+            27,
+            angle,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+    }
+
+
+    /*
+        Center
+    */
+
+    ctx.fillStyle = "#8e2047";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        11,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* --------------------------------------------------
+   DRAW TULIP
+-------------------------------------------------- */
+
+function drawTulip(x, y, scale, rotation) {
+
+    ctx.save();
+
+    ctx.translate(x, y);
+
+    ctx.rotate(rotation);
+
+    ctx.scale(scale, scale);
+
+
+    /*
+        Stem
+    */
+
+    ctx.strokeStyle = "#5c9a63";
+
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, 10);
+
+    ctx.quadraticCurveTo(
+        4,
+        45,
+        0,
+        80
+    );
+
+    ctx.stroke();
+
+
+    /*
+        Leaves
+    */
+
+    ctx.fillStyle = "#4f8957";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        -11,
+        58,
+        7,
+        25,
+        -0.55,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        12,
+        65,
+        7,
+        25,
+        0.55,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /*
+        Tulip flower
+    */
+
+    const gradient =
+        ctx.createLinearGradient(
+            -25,
+            -35,
+            25,
+            15
+        );
+
+    gradient.addColorStop(
+        0,
+        "#ffd1dc"
+    );
+
+    gradient.addColorStop(
+        0.45,
+        "#ff799d"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#d83268"
+    );
+
+    ctx.fillStyle = gradient;
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(-27, -5);
+
+    ctx.bezierCurveTo(
+        -29,
+        -38,
+        -12,
+        -48,
+        0,
+        -22
+    );
+
+    ctx.bezierCurveTo(
+        10,
+        -52,
+        29,
+        -38,
+        27,
+        -5
+    );
+
+    ctx.bezierCurveTo(
+        20,
+        18,
+        -18,
+        18,
+        -27,
+        -5
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* --------------------------------------------------
+   DRAW SUNFLOWER
+-------------------------------------------------- */
+
+function drawSunflower(x, y, scale, rotation) {
+
+    ctx.save();
+
+    ctx.translate(x, y);
+
+    ctx.rotate(rotation);
+
+    ctx.scale(scale, scale);
+
+
+    /*
+        Stem
+    */
+
+    ctx.strokeStyle = "#649c50";
+
+    ctx.lineWidth = 4;
+
+    ctx.beginPath();
+
+    ctx.moveTo(0, 12);
+
+    ctx.quadraticCurveTo(
+        5,
+        45,
+        0,
+        90
+    );
+
+    ctx.stroke();
+
+
+    /*
+        Leaves
+    */
+
+    ctx.fillStyle = "#57904d";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        -12,
+        55,
+        9,
+        23,
+        -0.7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        12,
+        68,
+        9,
+        23,
+        0.7,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    /*
+        Petals
+    */
+
+    ctx.fillStyle = "#f7c844";
+
+
+    for (let i = 0; i < 18; i++) {
+
+        const angle =
+            i * Math.PI * 2 / 18;
+
+        const px =
+            Math.cos(angle) * 25;
+
+        const py =
+            Math.sin(angle) * 25;
+
+
+        ctx.save();
+
+        ctx.translate(px, py);
+
+        ctx.rotate(angle);
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            0,
+            0,
+            9,
+            27,
+            0,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+
+    /*
+        Center
+    */
+
+    const center =
+        ctx.createRadialGradient(
+            0,
+            0,
+            2,
+            0,
+            0,
+            20
+        );
+
+    center.addColorStop(
+        0,
+        "#8a5624"
+    );
+
+    center.addColorStop(
+        1,
+        "#3c2415"
+    );
+
+    ctx.fillStyle = center;
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        20,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* --------------------------------------------------
+   DRAW WILDFLOWERS
+-------------------------------------------------- */
+
+function drawWildflower(x, y, scale, rotation) {
+
+    ctx.save();
+
+    ctx.translate(x, y);
+
+    ctx.rotate(rotation);
+
+    ctx.scale(scale, scale);
+
+
+    const colors = [
+        "#f7a7c3",
+        "#c9a7f7",
+        "#ffe08a",
+        "#ffffff",
+        "#9ed8c2"
+    ];
+
+
+    for (let flower = 0; flower < 4; flower++) {
+
+        const ox =
+            (flower - 1.5) * 18;
+
+        const oy =
+            -Math.random() * 30;
+
+
+        ctx.strokeStyle =
+            "rgba(105,160,105,0.8)";
+
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            ox,
+            oy
+        );
+
+        ctx.lineTo(
+            ox,
+            70
+        );
+
+        ctx.stroke();
+
+
+        const color =
+            colors[
+                Math.floor(
+                    Math.random() * colors.length
+                )
+            ];
+
+
+        ctx.fillStyle = color;
+
+
+        for (let p = 0; p < 5; p++) {
+
+            const angle =
+                p * Math.PI * 2 / 5;
+
+
+            ctx.beginPath();
+
+            ctx.ellipse(
+                ox +
+                Math.cos(angle) * 7,
+
+                oy +
+                Math.sin(angle) * 7,
+
+                5,
+                9,
+
+                angle,
+
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+        }
+
+
+        ctx.fillStyle = "#e8bb57";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            ox,
+            oy,
+            3,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+    }
+
+
+    ctx.restore();
+}
+
+
+/* --------------------------------------------------
+   DRAW FLOWERS
+-------------------------------------------------- */
+
+function drawFlowers() {
+
+    for (const flower of flowers) {
+
+        flower.life += 0.018;
+
+
+        const grow =
+            Math.min(
+                flower.life,
+                1
+            );
+
+
+        const floating =
+            Math.sin(
+                flower.life * 3
+            ) * 2;
+
+
+        if (flower.type === "rose") {
+
+            drawRose(
+                flower.x,
+                flower.y + floating,
+                flower.scale * grow,
+                flower.rotation
+            );
+
+        }
+
+
+        if (flower.type === "tulip") {
+
+            drawTulip(
+                flower.x,
+                flower.y + floating,
+                flower.scale * grow,
+                flower.rotation
+            );
+
+        }
+
+
+        if (flower.type === "sunflower") {
+
+            drawSunflower(
+                flower.x,
+                flower.y + floating,
+                flower.scale * grow,
+                flower.rotation
+            );
+
+        }
+
+
+        if (flower.type === "wildflower") {
+
+            drawWildflower(
+                flower.x,
+                flower.y + floating,
+                flower.scale * grow,
+                flower.rotation
+            );
+
+        }
+    }
+}
+
+
+/* --------------------------------------------------
+   DRAW PARTICLES
+-------------------------------------------------- */
+
+function drawParticles() {
+
+    for (
+        let i = particles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const p = particles[i];
+
+
+        p.x += p.vx;
+
+        p.y += p.vy;
+
+        p.vy += 0.012;
+
+        p.life -= 0.012;
+
+
+        if (p.life <= 0) {
+
+            particles.splice(i, 1);
+
+            continue;
+        }
+
+
+        ctx.save();
+
+        ctx.globalAlpha = p.life;
+
+        ctx.fillStyle = "#ffe8ef";
+
+        ctx.shadowBlur = 12;
+
+        ctx.shadowColor = "#ffb8cf";
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+
+        ctx.restore();
+    }
+}
+
+
+/* --------------------------------------------------
+   ANIMATION
+-------------------------------------------------- */
+
+function animate() {
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    drawFlowers();
+
+    drawParticles();
+
+
+    requestAnimationFrame(animate);
+}
+
+
+animate();
+
+
+/* --------------------------------------------------
+   DETECTION LOOP
+-------------------------------------------------- */
+
+function detectHands() {
+
+    if (
+        !handLandmarker ||
+        video.readyState < 2
+    ) {
+
+        requestAnimationFrame(
+            detectHands
+        );
+
+        return;
+    }
+
+
+    if (
+        video.currentTime ===
+        lastVideoTime
+    ) {
+
+        requestAnimationFrame(
+            detectHands
+        );
+
+        return;
+    }
+
+
+    lastVideoTime =
+        video.currentTime;
+
+
+    const result =
+        handLandmarker.detectForVideo(
+            video,
+            performance.now()
+        );
+
+
+    if (
+        result.landmarks &&
+        result.landmarks.length > 0
+    ) {
+
+        const landmarks =
+            result.landmarks[0];
+
+
+        let handedness =
+            "Right";
+
+
+        if (
+            result.handedness &&
+            result.handedness.length > 0 &&
+            result.handedness[0].length > 0
+        ) {
+
+            handedness =
+                result.handedness[0][0].categoryName;
+        }
+
+
+        const fingers =
+            countFingers(
+                landmarks,
+                handedness
+            );
+
+
+        const gesture =
+            getGesture(fingers);
+
+
+        /*
+            Use index fingertip as the
+            garden activation point.
+        */
+
+        const tip =
+            landmarkToScreen(
+                landmarks[8]
+            );
+
+
+        if (gesture) {
+
+            activateFlower(
+                gesture,
+                tip
+            );
+
+        }
+
+    }
+
+
+    requestAnimationFrame(
+        detectHands
+    );
+}
+
+
+/* --------------------------------------------------
+   START
+-------------------------------------------------- */
+
+async function start() {
+
+    try {
+
+        status.textContent =
+            "Opening the garden...";
+
+
+        await startCamera();
+
+
+        status.textContent =
+            "Teaching the garden your gestures...";
+
+
+        await startMediaPipe();
+
+
+        status.textContent =
+            "The garden is listening ✨";
+
+
+        detectHands();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        status.textContent =
+            "Something went wrong";
+
+
+        flowerName.textContent =
+            "The garden is asleep";
+
+
+        flowerMeaning.textContent =
+            error.message;
+
+
+        flowerQuote.textContent =
+            "Open the browser console for details.";
+
+    }
+}
+
+
+start();
+
+</script>
 
 </body>
-
 </html>
